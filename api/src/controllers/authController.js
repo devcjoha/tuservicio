@@ -1,0 +1,111 @@
+import User from "../models/User.js";
+import jwt from "jsonwebtoken";
+import { jwt_secret, isProduction } from "../../config.js";
+
+// ✅ Generar JWT
+const generateToken = (userId, role) => {
+  return jwt.sign({ userId, role }, jwt_secret, {
+    expiresIn: "7d",
+  });
+};
+
+// ✅ Registrar usuario
+export const register = async (req, res) => {
+  try {
+    const { name, email, password, role } = req.body;
+
+    // Verificar si ya existe
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "El email ya está registrado" });
+    }
+
+    // Crear usuario
+    const newUser = new User({
+      name,
+      email,
+      password,
+      role: role || "user", // por defecto user
+    });
+console.log("CONTROLLER-Register", newUser);
+
+    await newUser.save();
+
+    // Generar token
+    const token = generateToken(newUser._id, newUser.role);
+
+    // Enviar cookie segura
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "strict" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(201).json({
+      message: "Usuario registrado correctamente",
+      user: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
+      },
+    });
+  } catch (error) {
+    console.error("Error en register:", error);
+    res.status(500).json({ message: "Error en el servidor" });
+  }
+};
+
+// ✅ Login
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res
+      .status(400)
+      .json({ message: "Email y contraseña son obligatorios" });
+  }
+  try {
+    // Buscar usuario
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "Credenciales inválidas" });
+    }
+
+    // Comparar contraseña
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Credenciales inválidas" });
+    }
+
+    // Generar token
+    const token = generateToken(user._id, user.role);
+
+    // Enviar cookie segura
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "strict" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.json({
+      message: "Login exitoso",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error("Error en login:", error);
+    res.status(500).json({ message: "Error en el servidor" });
+  }
+};
+
+// ✅ Logout
+export const logout = (req, res) => {
+  res.clearCookie("token");
+  res.json({ message: "Sesión cerrada" });
+};

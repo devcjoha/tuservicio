@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #2e294e;
+
+  /* BRAND COLORS */
+  --brand-primary: #2e294e; /* Indigo Space */
+  --brand-secondary: #1b998b;/* Verdigris */ 
+  --brand-accent: #f46036; /* Tiger Flame */
+  --brand-support:  #d7263d; /* Crimson */
+  --brand-soft: #c5d86d; /* Lime Cream */
+  /* NEUTRALS */
+  --neutral-50: #fafafa;
+  --neutral-100: #f2f2f3;
+  --neutral-200: #e5e5e7;
+  --neutral-300: #d4d4d6;
+  --neutral-400: #b4b4b7;
+  --neutral-500: #949498;
+  --neutral-600: #343444;
+  --neutral-700: #4a4a4d;
+  --neutral-800: #2f2f31;
+  --neutral-900: #1a1a1c;
+
+  /* FEEDBACK COLORS */
+  --success: #1b998b; /* Verdigris */
+  --warning: #f46036; /* Tiger Flame */
+  --error: #d7263d; /* Crimson */
+
+  /* Typography */
+  --color-Typography: #2f2f31;
+  --font-inter-sans: "Inter", sans-serif;
+  --font-montserrat-sans: "Montserrat", sans-serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* BRAND COLORS */
+  --color-brand-primary: var(--brand-primary); /* Indigo Space */
+  --color-brand-secondary: var(--brand-secondary); /* Crimson */
+  --color-brand-accent: var(--brand-accent); /* Tiger Flame */
+  --color-brand-support: var(--brand-support); /* Verdigris */
+  --color-brand-soft: var(--brand-soft); /* Lime Cream */
+
+  /* NEUTRALS */
+  --color-neutral-50: var(--neutral-50);
+  --color-neutral-100: var(--neutral-100);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-400: var(--neutral-400);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-600: var(--neutral-600);
+  --color-neutral-700: var(--neutral-700);
+  --color-neutral-800: var(--neutral-800);
+  --color-neutral-900: var(--neutral-900);
+
+  /* FEEDBACK COLORS */
+  --color-success: var(--success); /* Verdigris */
+  --color-warning: var(--warning); /* Tiger Flame */
+  --color-error: var(--error); /* Crimson */
+
+  --color-fontColor: var(--color-Typography);
+  --font-inter: var(--font-inter-sans);
+  --font-montserrat: var(--font-montserrat-sans);
+}
+.dark {
+  --background: #2e294e;
+  --foreground: #ffffff;
+  --color-Typography:#ffffff;
+  
+  --brand-primary: #2e294e; /* Indigo Space */
+  --brand-secondary: #d7263d; /* Crimson */
+  --brand-accent: #f46036; /* Tiger Flame */
+  --brand-support: #1b998b; /* Verdigris */
+  --brand-soft: #c5d86d; /* Lime Cream */
+}
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Inter", sans-serif, "Montserrat", sans-serif;
+  box-sizing: border-box;
+}

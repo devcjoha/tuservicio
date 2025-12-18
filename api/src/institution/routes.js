@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authRequired } from "../middleware/authRequired.js";
 import { validateSchema } from "../middleware/validateSchema.js";
-import { institutionSchema } from "../validations/institution.schema.js";
+import { institutionSchema } from "./institution.schema.js";
 import { isOwnerOrAdmin } from "../middleware/isOwnerOrAdmin.js";
 import {
   createInstitution,
@@ -9,23 +9,33 @@ import {
   getInstitution,
   updateInstitution,
   deleteInstitution,
-} from "../controllers/institutionController.js";
+} from "./institutionController.js";
+import { isAdmin } from "../middleware/isAdmin.js";
 
 const router = Router();
 
-// Cualquier usuario autenticado puede crear una institución (se convierte en owner)
+// Crear institución
 router.post("/", authRequired, validateSchema(institutionSchema), createInstitution);
 
+// Editar institución owner o superadmin
+router.patch("/:id", authRequired, isOwnerOrAdmin, validateSchema(institutionSchema), updateInstitution);
+
 // Solo admin o superadmin pueden ver TODAS las instituciones
-router.get("/", authRequired, getInstitutions);
+router.get("/", authRequired, isAdmin, getInstitutions);
 
 // Ver una institución específica (admin, superadmin o owner)
 router.get("/:id", authRequired, isOwnerOrAdmin, getInstitution);
 
-// Actualizar institución (owner, admin o superadmin)
-router.patch("/:id", authRequired, isOwnerOrAdmin, validateSchema(institutionSchema), updateInstitution);
+// Owner ver su institución
+router.get("/:id", authRequired, isOwnerOrAdmin);
 
-// Eliminar institución (owner, admin o superadmin)
+// Suspender institución
+router.patch("/:id/suspend", authRequired, isAdmin);
+
+// Activar o desactivar una institución
+router.patch("/:id/toggle", authRequired, isOwnerOrAdmin);
+
+// Eliminar institución (owner o superadmin)
 router.delete("/:id", authRequired, isOwnerOrAdmin, deleteInstitution);
 
 export default router;

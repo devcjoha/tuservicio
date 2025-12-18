@@ -6,6 +6,7 @@ export const createInstitution = async (req, res) => {
       ...req.body,
       ownerId: req.user.id,
     });
+    //CAMBIAR EL ROL DEL USER A OWNER
     const savedInstitution = await institution.save();
     res.status(201).json({
       message: "Institución creada correctamente",

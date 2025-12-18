@@ -1,5 +1,10 @@
 {
   "actions": {
+    "AUTH_REGISTER": "Registro de usuario",
+    "AUTH_LOGIN": "Login de usuario",
+    "AUTH_LOGOUT": "Cerrar Sesión",
+    "AUTH_PROFILE": "Ruta Protegida de usuario",
+
     "REQ_CREATE": "Crear solicitud de servicio",
     "REQ_VIEW_STATUS": "Ver estado de solicitudes",
     "REQ_CANCEL": "Cancelar solicitud",

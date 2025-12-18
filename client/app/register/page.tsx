@@ -18,7 +18,7 @@ export default function RegisterPage() {
     email: "",
     password: "",
   });
-  console.log("REGISTER", form);
+  // console.log("REGISTER", form);
   const [error, setError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

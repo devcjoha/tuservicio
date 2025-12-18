@@ -1,4 +1,8 @@
 export type ActionId =
+  | "AUTH_REGISTER"
+  | "AUTH_LOGIN"
+  | "AUTH_LOGOUT"
+  | "AUTH_PROFILE"
   | "REQ_CREATE"
   | "REQ_VIEW_STATUS"
   | "REQ_CANCEL"
@@ -61,7 +65,7 @@ export const rolePermissions: Record<Role, ActionId[]> = {
     "REQ_FILTER_LOCATION",
     "REQ_FILTER_TYPE",
     "REQ_FILTER_POPULARITY",
-    "INST_CREATE"
+    "INST_CREATE",
   ],
 
   owner: [
@@ -96,7 +100,7 @@ export const rolePermissions: Record<Role, ActionId[]> = {
     "REQ_ACCEPT",
     "REQ_REJECT",
 
-    "STATS_VIEW_INSTITUTION"
+    "STATS_VIEW_INSTITUTION",
   ],
 
   admin: [
@@ -116,7 +120,7 @@ export const rolePermissions: Record<Role, ActionId[]> = {
 
     "STATS_VIEW_GLOBAL",
     "NOTIF_SEND_GLOBAL",
-    "SUPPORT_RESPOND"
+    "SUPPORT_RESPOND",
   ],
 
   superadmin: [
@@ -146,8 +150,8 @@ export const rolePermissions: Record<Role, ActionId[]> = {
     "SYSTEM_MAINTENANCE",
     "SYSTEM_EMERGENCY",
 
-    "STATS_VIEW_GLOBAL"
-  ]
+    "STATS_VIEW_GLOBAL",
+  ],
 };
 
 export function can(role: Role, action: ActionId): boolean {

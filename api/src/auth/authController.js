@@ -1,6 +1,9 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import { jwt_secret, isProduction } from "../../config.js";
+import permissions from "../permissions/permissions.json" with {type: "json"};
+
+
 
 // ✅ Generar JWT
 const generateToken = (userId, role) => {
@@ -19,17 +22,20 @@ export const register = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ message: "El email ya está registrado" });
     }
-
+    
     // Crear usuario
     const newUser = new User({
       name,
       email,
       password,
-      role: role || "user", // por defecto user
+      role: "user", // por defecto user
+      permissions: permissions.roles["user"]
     });
-console.log("CONTROLLER-Register", newUser);
+    // console.log("CONTROLLER-Register", permissions.roles[newUser.role]);
 
     await newUser.save();
+
+    const permisos = permissions.roles[newUser.role];
 
     // Generar token
     const token = generateToken(newUser._id, newUser.role);
@@ -41,7 +47,7 @@ console.log("CONTROLLER-Register", newUser);
       sameSite: isProduction ? "strict" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-
+  
     res.status(201).json({
       message: "Usuario registrado correctamente",
       user: {
@@ -49,6 +55,7 @@ console.log("CONTROLLER-Register", newUser);
         name: newUser.name,
         email: newUser.email,
         role: newUser.role,
+        permissions: permisos || []
       },
     });
   } catch (error) {
@@ -60,6 +67,7 @@ console.log("CONTROLLER-Register", newUser);
 // ✅ Login
 export const login = async (req, res) => {
   const { email, password } = req.body;
+
   if (!email || !password) {
     return res
       .status(400)
@@ -81,21 +89,26 @@ export const login = async (req, res) => {
     // Generar token
     const token = generateToken(user._id, user.role);
 
+    res.setHeader('Cache-Control', 'no-store');
     // Enviar cookie segura
     res.cookie("token", token, {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? "strict" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/",
     });
 
-    res.json({
+    const permisos = permissions.roles[user.role];
+
+  return res.status(200).json({
       message: "Login exitoso",
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
+        permissions: permisos
       },
     });
   } catch (error) {

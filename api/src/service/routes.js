@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authRequired } from "../middleware/authRequired.js";
 import { validateSchema } from "../middleware/validateSchema.js";
-import { serviceSchema } from "../validations/service.schema.js";
+import { serviceSchema } from "./service.schema.js";
 import { isOwnerOrAdmin } from "../middleware/isOwnerOrAdmin.js";
 
 import {
@@ -10,7 +10,7 @@ import {
   getService,
   updateService,
   deleteService,
-} from "../controllers/serviceController.js";
+} from "./serviceController.js";
 
 const router = Router();
 
@@ -21,12 +21,12 @@ router.post("/", authRequired, validateSchema(serviceSchema), isOwnerOrAdmin, cr
 router.get("/", authRequired, getServices);
 
 // Obtener un servicio (admin, superadmin o owner del proveedor)
-router.get("/:id", authRequired, isOwnerOrAdmin, getService);
+router.get("/institution/:id", authRequired, isOwnerOrAdmin, getService);
 
-// Actualizar servicio (owner, admin o superadmin)
-router.patch("/:id", authRequired, isOwnerOrAdmin, updateService);
+// Editar servicio (owner, admin o superadmin)
+router.patch("/institution/:id", authRequired, isOwnerOrAdmin, updateService);
 
 // Eliminar servicio (owner, admin o superadmin)
-router.delete("/:id", authRequired, isOwnerOrAdmin, deleteService);
+router.delete("/institution/:id", authRequired, isOwnerOrAdmin, deleteService);
 
 export default router;

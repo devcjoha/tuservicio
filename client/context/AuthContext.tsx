@@ -1,12 +1,17 @@
 "use client";
+import { useAuth } from "@/hooks/useAuth";
 import { apiFetch } from "@/lib/api";
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, ReactNode, useContext } from "react";
 
 type RegisterData = {
   name: string;
   email: string;
   password: string;
 };
+type LoginData = {
+    email: string;
+  password: string;
+}
 
 type UserType = {
   id: string;
@@ -17,74 +22,94 @@ type UserType = {
 } | null;
 
 type AuthContextType = {
-  user: UserType;
-  token: string | null;
+user: UserType;
+  isLoading: boolean;
+  error: string | null;
   register: (data: RegisterData) => Promise<void>;
-  login: (email: string, password: string) => Promise<void>;
+  login: (data: LoginData) => Promise<void>;
   logout: () => void;
+  clearError: () => void;
 };
 
-export const AuthContext = createContext<AuthContextType>({
-  user: null,
-  token: null,
-  register: async () => { },
-  login: async () => { },
-  logout: () => { },
-});
+export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserType>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // Iniciamos cargando para verificar sesión
+  const [error, setError] = useState<string | null>(null);
 
-  const login = async (email: string, password: string) => {
+  // 1. Verificar si hay sesión al cargar la app
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const res = await apiFetch("/auth/profile"); // Endpoint protegido
+        setUser(res.user);
+      } catch (err) {
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    checkSession();
+  }, []);
+
+const login = async (data: LoginData) => {
+  setIsLoading(true);
+  setError(null);
+  try {
     const res = await apiFetch("/auth/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-    });
-
-    setToken(res.token);
-    localStorage.setItem("token", res.token);
-
-    setUser({
-      id: res.user.id,
-      name: res.user.name,
-      email: res.user.email,
-      role: res.user.role,
-      permissions: res.user.permissions
-    });
-  };
-
-  const register = async (data: RegisterData) => {
-    console.log("CONTEXT-register", data);
-    
-    const res = await apiFetch("/auth/register", {
       method: "POST",
       body: JSON.stringify(data),
     });
 
-    console.log("AUTHCONTEXT-res", res);
-    setToken(res.token);
-    localStorage.setItem("token", res.token);
+    if (res.user) {
+      setUser({
+        id: res.user.id || res.user._id, 
+        name: res.user.name,
+        email: res.user.email,
+        role: res.user.role,
+        permissions: res.user.permissions || []
+      });
+    }
+  } catch (err: any) {
+    setError(err.message || "Error al iniciar sesión");
+    throw err;
+  } finally {
+    setIsLoading(false);
+  }
+};
 
-    setUser({
-      id: res.user.id,
-      name: res.user.name,
-      email: res.user.email,
-      role: res.user.role,
-      permissions: res.user.permissions
-    });
-    // Después de registrarse, hacemos login automático
-    await login(data.email, data.password);
+  const register = async (data: RegisterData) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await apiFetch("/auth/register", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+      setUser(res.user);
+    } catch (err: any) {
+      setError(err.message || "Error al registrarse");
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
   };
-  const logout = () => {
-    setUser(null);
-    setToken(null);
-    localStorage.removeItem("token");
+
+  const logout = async () => {
+    try {
+      await apiFetch("/auth/logout"); // Avisamos al backend para borrar la cookie
+    } finally {
+      setUser(null);
+      // Opcional: window.location.href = "/login";
+    }
   };
+  const clearError = () => setError(null);
 
   return (
-    <AuthContext.Provider value={{ user, token, register, login, logout }}>
+    <AuthContext.Provider value={{ 
+      user, isLoading, error, register, login, logout, clearError 
+    }}>
       {children}
     </AuthContext.Provider>
   );

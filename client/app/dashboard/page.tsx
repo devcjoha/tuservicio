@@ -1,17 +1,36 @@
 "use client";
 
 import { useAuth } from "@/hooks/useAuth";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function DashboardRouter() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
 
-  if (!user) return null; // o loading
+  useEffect(() => {
+    // Si todavía estamos validando la cookie de sesión, no hacemos nada
+    if (isLoading) return;
 
-  if (user.role === "user") redirect("/dashboard/user");
-  if (user.role === "owner") redirect("/dashboard/owner");
-  if (user.role === "admin") redirect("/dashboard/admin");
-  if (user.role === "superadmin") redirect("/dashboard/superadmin");
+    // Si terminó de cargar y no hay usuario, al login
+    if (!user) {
+      router.push("/login");
+      return;
+    }
 
-  return null;
+    // Mapeo de rutas según el rol definido en tu controlador
+    const routes: Record<string, string> = {
+      user: "/dashboard/user",
+      owner: "/dashboard/owner",
+      admin: "/dashboard/admin",
+      superadmin: "/dashboard/superadmin",
+    };
+    const target = routes[user.role];
+    
+    if (target) {
+      router.push(target);
+    }
+  }, [user, isLoading, router]);
+
+  return <p>Cargando sesión...</p>;
 }

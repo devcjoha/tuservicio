@@ -1,22 +1,23 @@
 export const API_URL = "http://localhost:4000/api";
 
 export async function apiFetch(endpoint: string, options: RequestInit = {}) {
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
+  
+  console.log("API-front", options);
   const headers = {
     "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    "Cache-Control": "no-cache",
     ...options.headers,
   };
 
   const res = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers,
+    credentials: "include",
   });
-console.log("API-front", res);
 
   if (!res.ok) {
-    throw new Error("Error en la petición");
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message ||"Error en la petición");
   }
 
   return res.json();

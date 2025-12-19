@@ -7,13 +7,16 @@ import Image from "next/image";
 import logoLight from "@/public/logo/tuservicio-light.svg";
 import logoDark from "@/public/logo/tuservicio-dark.svg";
 import { useTheme } from "@/context/ThemeContext";
+import { RegisterData } from "@/context/AuthContext";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
 
 export default function RegisterPage() {
   const { theme } = useTheme();
-  const { register, user } = useAuth();
+  const { register } = useAuth();
   const router = useRouter();
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<RegisterData>({
     name: "",
     email: "",
     password: "",
@@ -57,7 +60,7 @@ export default function RegisterPage() {
         )}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 ">
-          <input
+          <Input
             name="name"
             type="text"
             placeholder="Nombre"
@@ -67,7 +70,7 @@ export default function RegisterPage() {
             required
           />
 
-          <input
+          <Input
             name="email"
             type="email"
             placeholder="Correo"
@@ -77,7 +80,7 @@ export default function RegisterPage() {
             required
           />
 
-          <input
+          <Input
             name="password"
             type="password"
             placeholder="Contraseña"
@@ -87,12 +90,12 @@ export default function RegisterPage() {
             required
           />
 
-          <button
+          <Button
             type="submit"
             className="bg-brand-secondary text-white py-2 rounded hover:bg-brand-secondary transition"
           >
             Registrarme
-          </button>
+          </Button>
         </form>
       </div>
     </main>

@@ -1,8 +1,8 @@
 export const API_URL = "http://localhost:4000/api";
 
+
 export async function apiFetch(endpoint: string, options: RequestInit = {}) {
   
-  console.log("API-front", options);
   const headers = {
     "Content-Type": "application/json",
     "Cache-Control": "no-cache",

@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import { frontend_url } from "../config.js";
 import authRoutes from "./auth/index.js";
 import userRoutes from "./user/index.js";
+import permissionsRoute from "./config/index.js";
 import institutionRoutes from "./institution/index.js";
 import serviceRoutes from "./service/index.js";
 
@@ -31,6 +32,7 @@ app.use(morgan("dev"));
 // rutas
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("api/permissions", permissionsRoute)
 app.use("/api/institutions", institutionRoutes);
 app.use("/api/services", serviceRoutes);
 

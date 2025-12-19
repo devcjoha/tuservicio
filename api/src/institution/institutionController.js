@@ -1,19 +1,45 @@
 import Institution from "../models/Institution.js";
+import permissions from "../config/permissions.json" with { type: "json" };
+import User from "../models/User.js"
 
 export const createInstitution = async (req, res) => {
   try {
-    const institution = await Institution.create({
-      ...req.body,
-      ownerId: req.user.id,
+    const userId = req.user.id; 
+    const { name, type, email, phone, address, rif, logo } = req.body;
+
+    // Crear institución
+      const newInstitution = await Institution.create({ 
+      name, 
+      type, 
+      email, 
+      phone, 
+      address, 
+      rif, 
+      logo, 
+      ownerId: userId 
     });
-    //CAMBIAR EL ROL DEL USER A OWNER
-    const savedInstitution = await institution.save();
+
+    // Actualizar rol del usuario a "owner"
+    const user = await User.findByIdAndUpdate(userId);
+    if (user.role !== "owner") {
+      user.role = "owner";
+      user.permissions = permissions.roles["owner"];
+      await user.save();
+    }
+
     res.status(201).json({
       message: "Institución creada correctamente",
-      institution: savedInstitution,
+      institution: newInstitution,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        permissions: user.permissions
+      }
     });
   } catch (error) {
-    console.error("Error al crear institución:", error);
+    console.error("Error en createInstitution:", error);
     res.status(500).json({ message: "Error en el servidor" });
   }
 };

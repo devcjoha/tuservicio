@@ -1,4 +1,25 @@
+"use client";
+import HeaderDashboard from "@/components/header/HeaderDashboard";
+import { useAuth } from "@/hooks/useAuth";
+import Link from "next/link";
+
 export default function UserDashboard() {
-  
-  return <h1>Panel User</h1>;
+  const { user } = useAuth();
+console.log("Dash USER", user);
+
+  return (
+    <section className="dashboard-user w-full">
+          <HeaderDashboard />
+      <h1 className="text-4xl">Bienvenido, {user?.name}</h1>
+
+      <div className="quick-actions">
+        <Link href="/dashboard/user/new-request">Solicitar Servicio</Link>
+        <Link href="/dashboard/user/requests">Ver Mis Solicitudes</Link>
+        <Link href="/dashboard/user/search-services">Buscar Servicios</Link>
+        <Link href="/dashboard/user/create-institution">Ofrecer Servicio</Link>
+      </div>
+ 
+      {/* Aquí puedes agregar cards, estadísticas, etc. */}
+    </section>
+  );
 };

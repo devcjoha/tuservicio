@@ -6,9 +6,9 @@
 
   /* BRAND COLORS */
   --brand-primary: #2e294e; /* Indigo Space */
-  --brand-secondary: #1b998b;/* Verdigris */ 
+  --brand-secondary: #1b998b; /* Verdigris */
   --brand-accent: #f46036; /* Tiger Flame */
-  --brand-support:  #d7263d; /* Crimson */
+  --brand-support: #d7263d; /* Crimson */
   --brand-soft: #c5d86d; /* Lime Cream */
   /* NEUTRALS */
   --neutral-50: #fafafa;
@@ -21,6 +21,12 @@
   --neutral-700: #4a4a4d;
   --neutral-800: #2f2f31;
   --neutral-900: #1a1a1c;
+
+  /*HOVER*/
+  --primary-hover:#9f98d4a8;
+  --secundary-hover:#758d8a;
+
+  --text-primary-hover: #1a1a1c;
 
   /* FEEDBACK COLORS */
   --success: #1b998b; /* Verdigris */
@@ -38,11 +44,11 @@
   --color-foreground: var(--foreground);
 
   /* BRAND COLORS */
-  --color-brand-primary: var(--brand-primary); /* Indigo Space */
-  --color-brand-secondary: var(--brand-secondary); /* Crimson */
-  --color-brand-accent: var(--brand-accent); /* Tiger Flame */
-  --color-brand-support: var(--brand-support); /* Verdigris */
-  --color-brand-soft: var(--brand-soft); /* Lime Cream */
+  --color-primary: var(--brand-primary); /* Indigo Space */
+  --color-secondary: var(--brand-secondary); /* Crimson */
+  --color-accent: var(--brand-accent); /* Tiger Flame */
+  --color-support: var(--brand-support); /* Verdigris */
+  --color-soft: var(--brand-soft); /* Lime Cream */
 
   /* NEUTRALS */
   --color-neutral-50: var(--neutral-50);
@@ -56,6 +62,17 @@
   --color-neutral-800: var(--neutral-800);
   --color-neutral-900: var(--neutral-900);
 
+  /*ICONS*/
+  --color-gray-icon: var(--color-neutral-500);
+  --color-gray-border: var(--color-neutral-200);
+  
+  /*HOVERS*/
+  --color-hover-primary: var(--primary-hover);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-line-focus-ring: var(--brand-secondary);
+  
+  --color-hover-primary-text: var(--text-primary-hover);
+
   /* FEEDBACK COLORS */
   --color-success: var(--success); /* Verdigris */
   --color-warning: var(--warning); /* Tiger Flame */
@@ -68,8 +85,8 @@
 .dark {
   --background: #2e294e;
   --foreground: #ffffff;
-  --color-Typography:#ffffff;
-  
+  --color-Typography: #ffffff;
+
   --brand-primary: #2e294e; /* Indigo Space */
   --brand-secondary: #d7263d; /* Crimson */
   --brand-accent: #f46036; /* Tiger Flame */

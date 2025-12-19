@@ -3,12 +3,13 @@ import { useState } from "react";
 import Link from "next/link";
 import ThemeToggle from "@/components/header/ThemeToggle";
 import Image from "next/image";
-import CloseIcon from "@/components/icons/CloseIcon";
+
 import logoLight from "@/public/logo/tuservicio-light.svg";
 import logoDark from "@/public/logo/tuservicio-dark.svg";
-import HamburguerIcon from "@/components/icons/HamburgueIcon";
-import HomeIcon from "@/components/icons/HomeIcon";
+
 import { useTheme } from "@/context/ThemeContext";
+import { CircleX, House, Menu, UserLock } from "lucide-react";
+import Avatar from "../ui/Avatar";
 
 function Header() {
   const { theme } = useTheme();
@@ -47,9 +48,9 @@ function Header() {
         <Link href="/register" className="hover:text-brand-secondary">Register</Link>
 
         {/* AVATAR LOGIN */}
-        <div className="icon-login border-4 border-brand-primary w-9 lg:w-12 h-9 lg:h-12 rounded-full hover:border-brand-secondary ">
+       <Avatar/>
 
-        </div>
+
       </nav>
       {/* HAMBURGER Button*/}
       <button
@@ -60,9 +61,10 @@ function Header() {
         type="button"
         onClick={handleSideBar}
       >
-        <HamburguerIcon
-          className="text-dark-grayish-blue w-10"
-          alt="icon-hamburger" />
+
+        <Menu
+          className="text-gray-icon w-10"
+        />
       </button>
 
       {/* SIDEBAR mobile */}
@@ -77,14 +79,12 @@ function Header() {
       >
         <div className="nav-products flex flex-col gap-6 p-8 font-bold">
           {/* icon-close*/}
-          <CloseIcon
-            alt="icon-close"
-            className={isOpen ? "icon-close h-5 w-5 text-fontColor mb-8 ml-40" : ""}
+          <CircleX
+            className={isOpen ? "icon-close h-5 w-5 text-gray-icon mb-8 ml-40" : ""}
             onClick={handleSideBar} />
           {/* AVATAR LOGIN */}
-          <div className="icon-login border-4 border-brand-primary w-9 lg:w-12 h-9 lg:h-12 rounded-full hover:border-brand-secondary ">
+          <Avatar/>
 
-          </div>
           <Link href="/register">Register</Link>
           <Link href="/login">Login</Link>
           <Link href="/about">About</Link>
@@ -92,12 +92,7 @@ function Header() {
           <ThemeToggle />
 
           <Link href={"/"}>
-            <HomeIcon
-              alt="home-icon"
-              width={100}
-              height={100}
-              loading="eager"
-              className="link-home w-6 h-6 text-very-dark-blue" />
+            <House />
           </Link>
         </div>
       </nav>

@@ -3,6 +3,7 @@ import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { InstitutionProvider } from "@/context/InstitutionsContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -31,7 +32,9 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <AuthProvider>
+            <InstitutionProvider>
           {children}
+          </InstitutionProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

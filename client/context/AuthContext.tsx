@@ -1,43 +1,46 @@
 "use client";
-import { useAuth } from "@/hooks/useAuth";
-import { apiFetch } from "@/lib/api";
-import { createContext, useState, useEffect, ReactNode, useContext } from "react";
 
-type RegisterData = {
+import { apiFetch } from "@/lib/api";
+import { createContext, useState, useEffect, ReactNode } from "react";
+
+export type RegisterData = {
   name: string;
   email: string;
   password: string;
 };
-type LoginData = {
+export type LoginData = {
     email: string;
   password: string;
 }
+export type Role = "user" | "owner" | "admin" | "superadmin";
 
-type UserType = {
+export type UserType = {
   id: string;
   name: string;
   email: string;
-  role: string;
+  role: Role;
   permissions: string[]
-} | null;
+};
 
-type AuthContextType = {
-user: UserType;
+export type AuthContextType = {
+  user: UserType | null;
+  setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
   isLoading: boolean;
   error: string | null;
   register: (data: RegisterData) => Promise<void>;
   login: (data: LoginData) => Promise<void>;
   logout: () => void;
   clearError: () => void;
+   hasPermission: (actionId: string) => boolean;
 };
 
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<UserType>(null);
+  const [user, setUser] = useState<UserType | null>(null);
   const [isLoading, setIsLoading] = useState(true); // Iniciamos cargando para verificar sesión
   const [error, setError] = useState<string | null>(null);
-
+      console.log("AUTH CONTEXT", user);
   // 1. Verificar si hay sesión al cargar la app
   useEffect(() => {
     const checkSession = async () => {
@@ -96,6 +99,10 @@ const login = async (data: LoginData) => {
     }
   };
 
+   function hasPermission(actionId: string) {
+    return user?.permissions.includes(actionId) ?? false;
+  }
+
   const logout = async () => {
     try {
       await apiFetch("/auth/logout"); // Avisamos al backend para borrar la cookie
@@ -108,7 +115,7 @@ const login = async (data: LoginData) => {
 
   return (
     <AuthContext.Provider value={{ 
-      user, isLoading, error, register, login, logout, clearError 
+      user, setUser, isLoading, error, register, login, logout, clearError, hasPermission
     }}>
       {children}
     </AuthContext.Provider>

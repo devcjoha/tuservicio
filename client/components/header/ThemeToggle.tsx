@@ -1,5 +1,6 @@
 "use client";
 
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 
 export default function ThemeToggle() {
@@ -9,7 +10,7 @@ export default function ThemeToggle() {
       onClick={toggleTheme}
       className="w-12 h-12 p-2 flex items-center justify-center cursor-pointer"
     >
-      {theme === "light" ? "🌙" : "🔆"}
+      {theme === "light" ? <Moon /> : <Sun />}
     </button>
   );
 };

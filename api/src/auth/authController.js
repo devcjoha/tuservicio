@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import { jwt_secret, isProduction } from "../../config.js";
-import permissions from "../permissions/permissions.json" with {type: "json"};
+import permissions from "../config/permissions.json" with {type: "json"};
 
 
 
@@ -99,18 +99,17 @@ export const login = async (req, res) => {
       path: "/",
     });
 
-    const permisos = permissions.roles[user.role];
-
-  return res.status(200).json({
-      message: "Login exitoso",
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        permissions: permisos
-      },
-    });
+   const permisos = user.permissions || permissions.roles[user.role];
+return res.status(200).json({
+  message: "Login exitoso",
+  user: {
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    permissions: permisos
+  },
+});
   } catch (error) {
     console.error("Error en login:", error);
     res.status(500).json({ message: "Error en el servidor" });

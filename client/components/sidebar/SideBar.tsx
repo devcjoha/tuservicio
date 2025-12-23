@@ -13,6 +13,7 @@ function SideBar({ variant }: SidebarProps) {
   const links = getLinksByPermissions(user);
 
   return (
+    <>
     <ul className={`flex ${variant === "mobile" ? "justify-around" : "flex-col gap-2 p-4 h-full justify-center"}`}>
       {links.map((link, index) => (
         <li key={index} className="hover:bg-secondary-hover hover:text-primary hover:font-bold">
@@ -29,6 +30,10 @@ function SideBar({ variant }: SidebarProps) {
         </li>
       ))}
     </ul>
+      <div>
+        <span>Cerrar sesión</span>
+      </div>
+    </>
   );
 }
 

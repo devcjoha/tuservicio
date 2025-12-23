@@ -1,35 +1,13 @@
 import { z } from "zod";
 
-export const registerSchema = z.object({
-  name: z
-    .string({
-      required_error: "El nombre es obligatorio",
-    })
-    .min(2, "El nombre debe tener al menos 2 caracteres"),
-
-  email: z
-    .string({
-      required_error: "El email es obligatorio",
-    })
-    .email("Formato de email inválido"),
-
-  password: z
-    .string({
-      required_error: "La contraseña es obligatoria",
-    })
-    .min(6, "La contraseña debe tener al menos 6 caracteres"),
+export const loginSchema = z.object({
+  email: z.string().email("Correo inválido"),
+  password: z.string()
+    .min(8, "Mínimo 8 caracteres")
+    .regex(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/, 
+      "Debe incluir mayúscula, número y símbolo"),
 });
 
-export const loginSchema = z.object({
-  email: z
-    .string({
-      required_error: "El email es obligatorio",
-    })
-    .email("Formato de email inválido"),
-
-  password: z
-    .string({
-      required_error: "La contraseña es obligatoria",
-    })
-    .min(6, "La contraseña debe tener al menos 6 caracteres"),
+export const registerSchema = loginSchema.extend({
+  name: z.string().min(2, "Nombre demasiado corto"),
 });

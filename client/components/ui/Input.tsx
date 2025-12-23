@@ -22,7 +22,7 @@ export function Input({
   className,
   ...props }: InputProps) {
   const base =
-    "input border rounded-md px-3 py-2 focus:outline-none transition-all duration-200";
+    "input w-full border rounded-md px-3 py-2 focus:outline-none transition-all duration-200";
 
   const sizes = {
     sm: "text-sm py-1",

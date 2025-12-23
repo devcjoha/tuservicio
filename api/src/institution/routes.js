@@ -22,7 +22,7 @@ router.post("/", authRequired,  requirePermission("INST_CREATE"), validateSchema
 router.patch("/:id", authRequired, isOwnerOrAdmin, validateSchema(institutionSchema), updateInstitution);
 
 // Solo admin o superadmin pueden ver TODAS las instituciones
-router.get("/", authRequired, isAdmin, getInstitutions);
+router.get("/", authRequired, getInstitutions);
 
 // Ver una institución específica (admin, superadmin o owner)
 router.get("/:id", authRequired, isOwnerOrAdmin, getInstitution);

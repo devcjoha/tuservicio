@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import { getLinksByPermissions } from "@/utils/getLinksByPermissions";
 
-
 export type SidebarProps = {
   variant: "mobile" | "desktop";
 };
@@ -15,17 +14,17 @@ function SideBar({ variant }: SidebarProps) {
 
   return (
     <ul className={`flex ${variant === "mobile" ? "justify-around" : "flex-col gap-2 p-4 h-full justify-center"}`}>
-      {links.map(link => (
-        <li key={link.href}>
+      {links.map((link, index) => (
+        <li key={index} className="hover:bg-secondary-hover hover:text-primary hover:font-bold">
           <Link
+          className={`
+            flex items-center
+            ${variant === "mobile" ? "flex-col p-2" : "gap-3 p-3 h-9 text-[.8rem] rounded-md "}
+          `}
             href={link.href}
-            className={`
-              flex items-center
-              ${variant === "mobile" ? "flex-col p-2" : "gap-3 p-3 rounded-md hover:bg-gray-200"}
-            `}
           >
-            <link.icon className="w-6 h-7 text-gray-icon" />
-            {variant === "desktop" && <span>{link.label}</span>}
+            <link.icon className="w-6 h-7 text-gray-icon hover:text-primary" />
+            {variant === "desktop"  && <span className=" text-gray-500">{link.label}</span>}
           </Link>
         </li>
       ))}

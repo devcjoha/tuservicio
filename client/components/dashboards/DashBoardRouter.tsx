@@ -2,7 +2,7 @@
 import { Role } from "@/context/AuthContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { Children, useEffect } from "react";
+import { useEffect } from "react";
 
 type DashboardRouterProps = {
   children?: React.ReactNode;
@@ -24,7 +24,7 @@ export default function DashboardRouter({ children, className }: DashboardRouter
       return;
     }
 
-    // Mapeo de rutas según el rol definido en tu controlador
+    // Mapeo de rutas según el rol definido en el controlador
     const routes: Record<Role, string> = {
       user: "/dashboard/user",
       owner: "/dashboard/owner",

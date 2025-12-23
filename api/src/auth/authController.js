@@ -77,13 +77,13 @@ export const login = async (req, res) => {
     // Buscar usuario
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "Credenciales inválidas" });
+      return res.status(400).json({ message: "Email o contraseña inválidas" });
     }
 
     // Comparar contraseña
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Credenciales inválidas" });
+      return res.status(400).json({ message: "Comtraseña inválida" });
     }
 
     // Generar token

@@ -26,7 +26,7 @@ export const createInstitution = async (req, res) => {
       user.permissions = permissions.roles["owner"];
       await user.save();
     }
-
+    
     res.status(201).json({
       message: "Institución creada correctamente",
       institution: newInstitution,
@@ -38,25 +38,42 @@ export const createInstitution = async (req, res) => {
         permissions: user.permissions
       }
     });
+    console.log(res.json());
+    
   } catch (error) {
     console.error("Error en createInstitution:", error);
     res.status(500).json({ message: "Error en el servidor" });
   }
 };
 
+// Traer listado de instituciones según rol
 export const getInstitutions = async (req, res) => {
   try {
-    const institutions = await Institution.find();
+    // Superadmin → todas
+    if (req.user.role === "superadmin") {
+      const institutions = await Institution.find();
+      return res.json({ institutions });
+    }
 
-    res.json({
-      message: "Instituciones obtenidas",
-      institutions,
-    });
+    // Admin → todas
+    if (req.user.role === "admin") {
+      const institutions = await Institution.find();
+      return res.json({ institutions });
+    }
+
+    // Owner → solo las suyas
+    if (req.user.role === "owner") {
+      const institutions = await Institution.find({ ownerId: req.user.id });
+      return res.json({ institutions });
+    }
+
+    return res.status(403).json({ message: "No tienes permisos para esta acción" });
   } catch (error) {
     console.error("Error al obtener instituciones:", error);
     res.status(500).json({ message: "Error en el servidor" });
   }
 };
+
 
 export const getInstitution = async (req, res) => {
   try {

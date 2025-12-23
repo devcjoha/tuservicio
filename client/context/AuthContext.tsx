@@ -27,7 +27,7 @@ export type AuthContextType = {
   setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
   isLoading: boolean;
   error: string | null;
-  register: (data: RegisterData) => Promise<void>;
+  registerAuth: (data: RegisterData) => Promise<void>;
   login: (data: LoginData) => Promise<void>;
   logout: () => void;
   clearError: () => void;
@@ -82,7 +82,7 @@ const login = async (data: LoginData) => {
   }
 };
 
-  const register = async (data: RegisterData) => {
+  const registerAuth = async (data: RegisterData) => {
     setIsLoading(true);
     setError(null);
     try {
@@ -115,7 +115,7 @@ const login = async (data: LoginData) => {
 
   return (
     <AuthContext.Provider value={{ 
-      user, setUser, isLoading, error, register, login, logout, clearError, hasPermission
+      user, setUser, isLoading, error, registerAuth, login, logout, clearError, hasPermission
     }}>
       {children}
     </AuthContext.Provider>

@@ -10,8 +10,7 @@ console.log("Dash USER", user);
   return (
     <section className="dashboard-user w-full">
           <HeaderDashboard />
-      <h1 className="text-4xl">Bienvenido, {user?.name}</h1>
-
+    
       <div className="quick-actions">
         <Link href="/dashboard/user/new-request">Solicitar Servicio</Link>
         <Link href="/dashboard/user/requests">Ver Mis Solicitudes</Link>

@@ -19,11 +19,11 @@ export const institutionSchema = z.object({
 
   address: z.string().min(5, "La dirección es demasiado corta"),
 
-  rif: z.string().min(5, "El RIF es inválido"),
+   rif: z.string().regex(/^[JGVEP]-\d{8}-\d$/, "Formato de RIF inválido"),
 
   logo: z
     .string()
-    .url({ message: "El logo debe ser una URL válida" })
+    .url({ message: "El logo debe ser una URL válida, puede agregarla luego" })
     .optional(),
 
   active: z.boolean().optional(),

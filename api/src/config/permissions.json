@@ -90,8 +90,7 @@
       "REQ_FILTER_LOCATION",
       "REQ_FILTER_TYPE",
       "REQ_FILTER_POPULARITY",
-      "INST_CREATE",
-
+    
       "INST_EDIT",
       "INST_DELETE",
       "INST_TOGGLE_ACTIVE",

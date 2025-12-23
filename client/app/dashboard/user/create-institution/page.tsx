@@ -10,13 +10,12 @@ export default function UserDashboard() {
   console.log("create insti page", user);
 
   return (
-    <section className="create-institution-page w-full lg:p-10">
-          <HeaderDashboard />
-            <p className="text-2xl">{user?.name}, para ofrecer un servicio debes registrarte como empresa, desde ese momento disfrutarás de otras opciones.</p>
-            <div className="form-createInst-container lg:p-20">
-      <CreateInstitutionForm />
-      </div>
-
+    <section className="create-institution-page w-full lg:p-5 lg:space-y-5">
+      <HeaderDashboard />
+      <p className="lg:text-2xl font-medium ">Es necesario registrarse como empresa {user?.name}. <br />
+        Luego, podrás ofrecer tus servicios.</p>
+   
+        <CreateInstitutionForm />
 
     </section>
   );

@@ -1,24 +1,20 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
-import { UserType } from "./AuthContext";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { apiFetch } from "@/lib/api";
+import { z } from "zod";
+import { institutionSchema } from "@/utils/validationSchemas";
 
-export type Institution = {
-  id: string;
-  name: string;
-  type: string;
-  email: string;
-  phone: string;
-  address: string;
-  rif: string;
-  logo?: string;
-};
+
+export type InstitutionForm = z.infer<typeof institutionSchema>;
+export type Institution = InstitutionForm & { id: string, active: boolean };
 
 export type InstitutionContextType = {
   institutions: Institution[];
-  createInstitution: (data: Omit<Institution, "id">) => Promise<void>;
+  createInstitution: (data: InstitutionForm) => Promise<void>;
+  loading: boolean;
+  error: string | null;
 };
 
 const InstitutionContext = createContext<InstitutionContextType | null>(null);
@@ -26,35 +22,53 @@ const InstitutionContext = createContext<InstitutionContextType | null>(null);
 export const InstitutionProvider = ({ children }: { children: React.ReactNode }) => {
   const [institutions, setInstitutions] = useState<Institution[]>([]);
   const { user, setUser } = useAuth();
-const [loading, setLoading] = useState(false);
-const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const getInstitutions = async () => {
+      setLoading(true);
+      try {
 
+        if (user?.id && user.role === "owner") {
+          const res = await  apiFetch(`/institutions`)
+          console.log("INST CONTEXT", res);
+          setInstitutions(res.institutions || []);
+        
+        }
+      } catch (error) {
+        setInstitutions([])
+      } finally {
+        setLoading(false);
+      }
+    }
+    getInstitutions();
+  }, [user]);
 
- const createInstitution = async (data:  Omit<Institution, "id"> ) => {
+  const createInstitution = async (data: InstitutionForm) => {
     setLoading(true);
     setError(null);
     try {
       const res = await apiFetch("/institutions", {
         method: "POST",
-        body: JSON.stringify(data ),
+        body: JSON.stringify(data),
       });
-      const result = await res.json();
 
-      if(result.institution){
+      if (res.institution) {
+        setUser(res.user)
         setInstitutions((prev) => [...prev, res.institution]);
-        setUser(result.user)
       }
-      console.log("INST CONTEXT", institutions);
-      
+
     } catch (err: any) {
-    setError(err.message || "InstitutionContext: Error al crear institución");
-  } finally {
-    setLoading(false);
-  }
+      setError(err.message || "InstitutionContext: Error al crear institución");
+    } finally {
+      setLoading(false);
+    }
   };
 
+
   return (
-    <InstitutionContext.Provider value={{ institutions, createInstitution }}>
+    <InstitutionContext.Provider value={{ institutions, createInstitution, error, loading }}>
       {children}
     </InstitutionContext.Provider>
   );

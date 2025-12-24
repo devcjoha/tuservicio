@@ -31,7 +31,6 @@ export const register = async (req, res) => {
       role: "user", // por defecto user
       permissions: permissions.roles["user"]
     });
-    // console.log("CONTROLLER-Register", permissions.roles[newUser.role]);
 
     await newUser.save();
 
@@ -45,7 +44,7 @@ export const register = async (req, res) => {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? "strict" : "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      // maxAge: 7 * 24 * 60 * 60 * 1000,
     });
   
     res.status(201).json({
@@ -95,7 +94,7 @@ export const login = async (req, res) => {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? "strict" : "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      // maxAge: 7 * 24 * 60 * 60 * 1000,
       path: "/",
     });
 
@@ -117,7 +116,20 @@ return res.status(200).json({
 };
 
 // ✅ Logout
-export const logout = (req, res) => {
-  res.clearCookie("token");
-  res.json({ message: "Sesión cerrada" });
+export const logout = async (req, res) => {
+  try {
+    // Borramos la cookie 'token' poniéndole una fecha de expiración pasada
+    res.cookie("token", "", {
+      httpOnly: true,
+      secure: isProduction, // Asegúrate de tener esta variable importada
+      sameSite: isProduction ? "strict" : "lax",
+      expires: new Date(0),
+      path: "/",
+    });
+    
+    return res.status(200).json({ message: "Sesión cerrada correctamente" });
+  } catch (error) {
+    console.error("Error en logout:", error);
+    res.status(500).json({ message: "Error al cerrar sesión" });
+  }
 };

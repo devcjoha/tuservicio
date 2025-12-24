@@ -1,6 +1,7 @@
 "use client";
 
 import { apiFetch } from "@/lib/api";
+import router from "next/router";
 import { createContext, useState, useEffect, ReactNode } from "react";
 
 export type RegisterData = {
@@ -40,7 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserType | null>(null);
   const [isLoading, setIsLoading] = useState(true); // Iniciamos cargando para verificar sesión
   const [error, setError] = useState<string | null>(null);
-      console.log("AUTH CONTEXT", user);
+
   // 1. Verificar si hay sesión al cargar la app
   useEffect(() => {
     const checkSession = async () => {
@@ -49,6 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(res.user);
       } catch (err) {
         setUser(null);
+        console.log("Sesión no válida o usuario borrado", error);
       } finally {
         setIsLoading(false);
       }
@@ -104,14 +106,36 @@ const login = async (data: LoginData) => {
   }
 
   const logout = async () => {
+    setIsLoading(true);
     try {
-      await apiFetch("/auth/logout"); // Avisamos al backend para borrar la cookie
-    } finally {
+      // 1. Avisamos al backend para que borre la cookie
+      await apiFetch("/auth/logout"); 
+      
+      // 2. Limpiamos el estado local inmediatamente
       setUser(null);
-      // Opcional: window.location.href = "/login";
+      
+      // 3. Opcional: Redirigir al login
+      window.location.href = "/"; 
+  
+    } catch (error) {
+      console.error("Error al cerrar sesión", error);
+      // Aunque falle la red, es mejor limpiar el estado local
+      setUser(null);
+    } finally {
+      setIsLoading(false);
     }
   };
+
   const clearError = () => setError(null);
+
+  // Esto limpia el estado local de React antes de que la pestaña desaparezca, bo
+  useEffect(() => {
+    const handleTabClose = () => {
+      setUser(null);
+    };
+    window.addEventListener("beforeunload", handleTabClose);
+    return () => window.removeEventListener("beforeunload", handleTabClose);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ 

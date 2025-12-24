@@ -1,24 +1,33 @@
 "use client";
 import HeaderDashboard from "@/components/header/HeaderDashboard";
+import { Select } from "@/components/ui/Select";
 import { useAuth } from "@/hooks/useAuth";
-import Link from "next/link";
+import { getLinksByPermissions } from "@/utils/getLinksByPermissions";
+
 
 export default function UserDashboard() {
   const { user } = useAuth();
-console.log("Dash USER", user);
+   const searchLinks = getLinksByPermissions(user, "search");
 
-  return (
-    <section className="dashboard-user w-full">
-          <HeaderDashboard />
-    
-      <div className="quick-actions">
-        <Link href="/dashboard/user/new-request">Solicitar Servicio</Link>
-        <Link href="/dashboard/user/requests">Ver Mis Solicitudes</Link>
-        <Link href="/dashboard/user/search-services">Buscar Servicios</Link>
-        <Link href="/dashboard/user/create-institution">Ofrecer Servicio</Link>
-      </div>
+   // Transformamos los links al formato que espera el Select
+   const options = searchLinks.map(link => ({
+     value: link.href,
+     label: link.label
+   }));
  
-      {/* Aquí puedes agregar cards, estadísticas, etc. */}
-    </section>
-  );
+   const handleFilterChange = (path: string) => {
+     console.log("Navegando a o filtrando por:", path);
+     // Aquí podrías usar router.push(path) si es navegación
+   };
+ 
+   return (
+     <div className="p-4 bg-secondary-bg">
+       <Select 
+         label="Filtrar por tipo de búsqueda"
+         options={options} 
+         onChangeValue={handleFilterChange}
+         placeholder="¿Qué deseas buscar?"
+       />
+     </div>
+   );
 };

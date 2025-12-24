@@ -38,8 +38,7 @@ export const createInstitution = async (req, res) => {
         permissions: user.permissions
       }
     });
-    console.log(res.json());
-    
+   
   } catch (error) {
     console.error("Error en createInstitution:", error);
     res.status(500).json({ message: "Error en el servidor" });

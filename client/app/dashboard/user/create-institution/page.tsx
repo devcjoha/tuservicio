@@ -4,10 +4,8 @@ import CreateInstitutionForm from "@/components/forms/CreateInstitutionForm";
 import HeaderDashboard from "@/components/header/HeaderDashboard";
 import { useAuth } from "@/hooks/useAuth";
 
-
 export default function UserDashboard() {
   const { user } = useAuth();
-  console.log("create insti page", user);
 
   return (
     <section className="create-institution-page w-full lg:p-5 lg:space-y-5">

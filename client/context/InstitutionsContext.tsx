@@ -32,8 +32,7 @@ export const InstitutionProvider = ({ children }: { children: React.ReactNode })
 
         if (user?.id && user.role === "owner") {
           const res = await  apiFetch(`/institutions`)
-          console.log("INST CONTEXT", res);
-          setInstitutions(res.institutions || []);
+            setInstitutions(res.institutions || []);
         
         }
       } catch (error) {

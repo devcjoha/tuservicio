@@ -31,7 +31,6 @@ export default function CreateInstitutionForm() {
     try {
       await createInstitution(data)
       if (user?.role === "owner") { router.push("/dashboard"); }
-      // user && user.role === "owner" ? router.push("/dashboard") : null;
     } catch (err) {
       console.error(err);
       alert("Error en el servidor");

@@ -3,21 +3,38 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { apiFetch } from "@/lib/api";
-import { z } from "zod";
-import { institutionSchema } from "@/utils/validationSchemas";
+// import { z } from "zod";
+// import { institutionSchema } from "@/utils/validationSchemas";
 
+export interface BaseInstitution {
+  name: string;
+  type: string;
+  phone: string;
+  email: string;
+  rif: string;
+  address: string;
+  ownerId: string;
+}
+// 1. Para el Formulario (Input): Base + el logo como FileList
+export type InstitutionForm = BaseInstitution & {
+  logo: FileList;
+};
+// 2. Para la API (Output): Base + logo como string + ID y estado
+export type Institution = BaseInstitution & {
+  id: string; // Aquí está el ID de la base de datos
+  logo: string; // Aquí es la ruta/URL
+  active: boolean;
+};
 
-export type InstitutionForm = z.infer<typeof institutionSchema>;
-export type Institution = InstitutionForm & { id: string, active: boolean };
 
 export type InstitutionContextType = {
   institutions: Institution[];
-  createInstitution: (data: InstitutionForm) => Promise<void>;
+  createInstitution: (data: FormData) => Promise<void>;
   loading: boolean;
   error: string | null;
 };
 
-const InstitutionContext = createContext<InstitutionContextType | null>(null);
+export const InstitutionContext = createContext<InstitutionContextType | null>(null);
 
 export const InstitutionProvider = ({ children }: { children: React.ReactNode }) => {
   const [institutions, setInstitutions] = useState<Institution[]>([]);
@@ -44,13 +61,14 @@ export const InstitutionProvider = ({ children }: { children: React.ReactNode })
     getInstitutions();
   }, [user]);
 
-  const createInstitution = async (data: InstitutionForm) => {
+  const createInstitution = async (data: FormData) => {
     setLoading(true);
     setError(null);
     try {
       const res = await apiFetch("/institutions", {
         method: "POST",
-        body: JSON.stringify(data),
+        // body: JSON.stringify(data),
+        body: data,
       });
 
       if (res.institution) {

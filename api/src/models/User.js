@@ -25,10 +25,14 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "owner", "admin", "superadmin"],
       default: "user",
     },
-    permissions: { 
+    permissions: {
       type: [String],
-      default: [], 
-  },
+      default: [],
+    },
+    avatar: {
+      type: String,
+      default: "", // Aquí se guardará algo como: "/uploads/avatars/170345.png"
+    },
   },
   {
     timestamps: true,
@@ -39,9 +43,8 @@ const userSchema = new mongoose.Schema(
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return;
 
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
 });
 
 // Método para comparar contraseñas

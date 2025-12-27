@@ -43,6 +43,7 @@ const institutionSchema = new mongoose.Schema(
     logo: {
       type: String,
       trim: true,
+      default: "",
     },
 
     active: {
@@ -54,6 +55,11 @@ const institutionSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    // services: {
+    //   type: [String],
+    //   ref: "Services",
+    //   default: [],
+    // },
   },
   {
     timestamps: true,

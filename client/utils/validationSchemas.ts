@@ -28,6 +28,16 @@ export const institutionSchema = z.object({
   email: z.string().email("Correo inválido"),
   rif: z.string().regex(/^[JGVEP]-\d{8}-\d$/, "Formato de RIF inválido"),
   address: z.string().min(5, "Dirección requerida"),
-  logo: z.string().url("Debe ser una URL válida"),
+  logo: z.custom<FileList>()
+    .refine((files) => files?.length > 0, "El logo es obligatorio"),
+  // logo: z
+  //   .custom<FileList>()
+  //   .refine((files) => files?.length > 0, "La imagen obligatorio")
+  //   .transform((files) => files[0]) // Capturamos el primer archivo
+  //   .refine((file) => file.size <= 2 * 1024 * 1024, "Máximo 2MB")
+  //   .refine(
+  //     (file) => ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/svg"].includes(file.type),
+  //     "Solo formatos JPG, PNG , WebP y SVG"
+  //   ),
   ownerId: z.string(),
 });

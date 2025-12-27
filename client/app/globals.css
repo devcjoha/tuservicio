@@ -5,9 +5,9 @@
   --foreground: hsl(248, 31%, 23%);
 
   /* BRAND COLORS */
-  --brand-primary: #2e294e;
+  --brand-indigo: #2e294e;
   /* Indigo Space */
-  --brand-secondary: #1b998b;
+  --brand-verdi: #1b998b;
   /* Verdigris */
   --brand-accent: #f46036;
   /* Tiger Flame */
@@ -52,9 +52,9 @@
   --color-foreground: var(--foreground);
 
   /* BRAND COLORS */
-  --color-primary: var(--brand-primary);
+  --color-primary: var(--brand-indigo);
   /* Indigo Space */
-  --color-secondary: var(--brand-secondary);
+  --color-secondary: var(--brand-verdi);
   /* Crimson */
   --color-accent: var(--brand-accent);
   /* Tiger Flame */
@@ -104,13 +104,13 @@
   --foreground: #ffffff;
   --color-Typography: #ffffff;
 
-  --brand-primary: #2e294e;
+  --brand-primary: #1b998b;
   /* Indigo Space */
-  --brand-secondary: #d7263d;
+  --brand-secondary: #c5d86d;
   /* Crimson */
   --brand-accent: #f46036;
   /* Tiger Flame */
-  --brand-support: #1b998b;
+  --brand-support: #d7263d;
   /* Verdigris */
   --brand-soft: #c5d86d;
   /* Lime Cream */
@@ -126,6 +126,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Inter", sans-serif, "Montserrat", sans-serif;
   box-sizing: border-box;
 }

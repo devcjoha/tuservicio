@@ -52,3 +52,20 @@ export const updateUserRole = async (req, res) => {
     res.status(500).json({ message: "Error en el servidor" });
   }
 };
+
+export const updateUserAvatar = async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ message: "No se subió ninguna imagen" });
+
+    const avatarPath = `/uploads/avatars/${req.file.filename}`;
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { avatar: avatarPath },
+      { new: true }
+    );
+
+    res.json({ message: "Avatar actualizado", user });
+  } catch (error) {
+    res.status(500).json({ message: "Error al subir avatar" });
+  }
+};

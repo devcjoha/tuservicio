@@ -13,6 +13,10 @@ import requestRoutes from "./request/index.js";
 import employeeRoutes from "./employees/index.js";
 import statsRoutes from "./stats/index.js";
 import supportRoutes from "./support/index.js";
+
+import path from "path";
+import { fileURLToPath } from "url";
+
 import systemRoutes from "./system/index.js";
 
 const app = express();
@@ -29,6 +33,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan("dev"));
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 // rutas
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
@@ -41,5 +47,9 @@ app.use("/api/employees", employeeRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/support", supportRoutes);
 app.use("/api/system", systemRoutes);
+
+
+// ... después de tus middlewares de express.json()
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 export default app;

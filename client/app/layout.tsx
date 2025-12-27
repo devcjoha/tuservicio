@@ -8,11 +8,13 @@ import { InstitutionProvider } from "@/context/InstitutionsContext";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -28,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${montserrat.variable} ${inter.variable} antialiased`}
+        className={`${montserrat.variable} ${inter.variable} ${montserrat.className} ${inter.className} antialiased`}
       >
         <ThemeProvider>
           <AuthProvider>

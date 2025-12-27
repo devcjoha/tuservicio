@@ -2,9 +2,9 @@ export const API_URL = "http://localhost:4000/api";
 
 
 export async function apiFetch(endpoint: string, options: RequestInit = {}) {
-  
+  const isFormData = options.body instanceof FormData;
   const headers = {
-    "Content-Type": "application/json",
+    ...(!isFormData && { "Content-Type": "application/json" }),
     "Cache-Control": "no-cache",
     ...options.headers,
   };

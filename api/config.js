@@ -7,3 +7,6 @@ export const db_name = process.env.DB_NAME;
 export const frontend_url = process.env.FRONTEND_URL;
 export const jwt_secret = process.env.JWT_SECRET;
 export const isProduction = process.env.NODE_ENV === "production";
+export const cloud_name= process.env.CLOUD_NAME;
+export const api_key= process.env.API_KEY;
+export const api_secret= process.env.API_SECRET;

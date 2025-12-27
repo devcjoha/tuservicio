@@ -2,6 +2,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import SideBar from "@/components/sidebar/SideBar";
 import DashboardRouter from "@/components/dashboards/DashBoardRouter";
+import HeaderDashboard from "@/components/header/HeaderDashboard";
 
 
 function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -21,6 +22,7 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
 
         {/* Contenido */}
         <main className="flex-1 p-5">
+          <HeaderDashboard />
           {children}
         </main>
       </div>

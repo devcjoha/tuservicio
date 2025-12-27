@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 import z from "zod";
-import { FormField } from "./FormField";
+import { FormField } from "../ui/FormField";
 
 type RegisterData = z.infer<typeof registerSchema>;
 
@@ -32,7 +32,7 @@ export default function RegisterForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full">
-     
+
       <FormField
         label="Nombre"
         register={register("name")}

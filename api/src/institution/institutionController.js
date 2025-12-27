@@ -1,12 +1,19 @@
 import Institution from "../models/Institution.js";
 import permissions from "../config/permissions.json" with { type: "json" };
-import User from "../models/User.js"
+import User from "../models/User.js";
+import { uploadImage } from "../utils/cloudinary.js";
 
 export const createInstitution = async (req, res) => {
   try {
     const userId = req.user.id; 
-    const { name, type, email, phone, address, rif, logo } = req.body;
+    const { name, type, email, phone, address, rif } = req.body;
+    const image = req.file;
 
+    const logoPath = req.file ? `/uploads/logos/${req.file.filename}` : null;
+    
+    const imageCloudinary = await uploadImage(image);
+
+    console.log("INST CONTROLLER", imageCloudinary)
     // Crear institución
       const newInstitution = await Institution.create({ 
       name, 
@@ -15,7 +22,7 @@ export const createInstitution = async (req, res) => {
       phone, 
       address, 
       rif, 
-      logo, 
+      logo: logoPath, 
       ownerId: userId 
     });
 

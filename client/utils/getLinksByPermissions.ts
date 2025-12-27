@@ -38,28 +38,28 @@ const allLinks: Link[] = [
   },
   {
     href: "/dashboard/user/search-services",
-    label: "Buscar Servicios",
+    label: "Todos los servicios",
     icon: Search,
     required: "REQ_SEARCH",
     category: "search"
   },
   {
     href: "/dashboard",
-    label: "Buscar servicios",
+    label: "Servicios por zona",
     icon: MapPinCheck,
     required: "REQ_FILTER_LOCATION",
     category: "search"
   },
   {
     href: "/dashboard",
-    label: "Buscar servicios",
+    label: "Servicios por categoría",
     icon: UserRoundSearch,
     required: "REQ_FILTER_TYPE",
     category: "search"
   },
   {
     href: "/dashboard",
-    label: "Buscar servicios",
+    label: "Servicios más populares",
     icon: Award,
     required: "REQ_FILTER_POPULARITY",
     category: "search"

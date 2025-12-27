@@ -10,6 +10,7 @@ import logoDark from "@/public/logo/tuservicio-dark.svg";
 import { useTheme } from "@/context/ThemeContext";
 import { CircleX, House, Menu, UserLock } from "lucide-react";
 import Avatar from "../ui/Avatar";
+import Logo from "@/components/icons/Logo";
 
 function Header() {
   const { theme } = useTheme();
@@ -22,20 +23,7 @@ function Header() {
 
     <section className="header-section flex flex-row w-full lg:h-28 h-18 items-center justify-between lg:pl-15 lg:pr-25">
       {/* LOGO */}
-      <Image
-        src={theme === "light" ? logoLight : logoDark}
-        alt="logo-header"
-        width={300}
-        height={300}
-        loading="eager"
-        className="w-50 h-12 lg:w-70 lg:h-16" />
-      {/* ICON HOME
-          <HomeIcon
-            alt="home-icon"
-            width={100}
-            height={100}
-            loading="eager"
-            className="link-home w-5 h-5 text-very-dark-blue" /> */}
+    <Logo/>
 
       {/*NAVBAR DESKTOP */}
       <nav className="nav hidden lg:flex lg:flex-row gap-9 items-center w-1/2 justify-end ">

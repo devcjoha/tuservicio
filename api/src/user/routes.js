@@ -5,7 +5,8 @@ import { updateUserRole } from "./userController.js";
 import { validateSchema } from "../middleware/validateSchema.js";
 import { updateRoleSchema } from "./user.schema.js";
 import { isAdmin } from "../middleware/isAdmin.js";
-
+import { upload } from "../middleware/upload.js";
+import { updateUserAvatar } from "./userController.js";
 const router = Router();
 
 // Eliminar usuario
@@ -16,6 +17,13 @@ router.get("/", authRequired, isAdmin);
 router.patch("/:id/suspend", authRequired, isAdmin);
 // Solo superadmin puede cambiar roles
 router.patch("/:id/role", authRequired, isSuperAdmin, validateSchema(updateRoleSchema), updateUserRole);
+
+router.patch(
+  "/avatar", 
+  authRequired, 
+  upload.single("avatar"), 
+  updateUserAvatar
+);
 
 
 export default router;

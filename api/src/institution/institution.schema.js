@@ -23,7 +23,6 @@ export const institutionSchema = z.object({
 
   logo: z
     .string()
-    .url({ message: "El logo debe ser una URL válida, puede agregarla luego" })
     .optional(),
 
   active: z.boolean().optional(),

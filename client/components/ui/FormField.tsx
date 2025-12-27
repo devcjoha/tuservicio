@@ -1,17 +1,19 @@
 import { FieldError } from "react-hook-form";
-import { Input } from "../ui/Input";
-import { Textarea } from "../ui/Textarea";
-import { Select } from "../ui/Select";
+import { Input } from "./Input";
+import { Textarea } from "./Textarea";
+import { Select } from "./Select";
 
-type FieldType = "input" | "select" | "textarea";
-type FormFieldProps = {
+type FieldType = "input" | "select" | "textarea" | "file";
+export type FormFieldProps = {
   label: string;
   type?: string; // para input
   placeholder?: string;
-  register: any; // viene de useForm().register
+  register: any; // handle
   error?: FieldError;
   fieldType?: FieldType;
   options?: { value: string; label: string }[]; // para select
+  accept?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export function FormField({
@@ -22,6 +24,8 @@ export function FormField({
   error,
   fieldType = "input",
   options,
+  accept,
+  onChange,
 }: FormFieldProps) {
   const errorId = `${label.toLowerCase()}-error`;
 
@@ -59,12 +63,21 @@ export function FormField({
           errorMessage={error?.message}
         >
           <option value="">Seleccione</option>
-          {options?.map((opt) => (
-            <option key={opt.value} value={opt.value}>
+          {options?.map((opt, index) => (
+            <option key={index} value={opt.value}>
               {opt.label}
             </option>
           ))}
         </Select>
+      )}
+      {fieldType === "file" && (
+        <Input 
+        {...register}
+        type="file" 
+        accept={accept} 
+        onChange={onChange} 
+        aria-invalid={!!error} 
+        aria-describedby={error ? errorId : undefined} className="w-full border rounded-md px-3 py-2" />
       )}
     </div>
   );

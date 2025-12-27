@@ -5,4 +5,7 @@ export const updateRoleSchema = z.object({
     required_error: "El rol es obligatorio",
     invalid_type_error: "Rol inválido",
   }),
+  avatar: z
+      .string()
+      .optional(),
 });

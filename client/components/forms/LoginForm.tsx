@@ -8,12 +8,12 @@ import { loginSchema } from "@/utils/validationSchemas";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { FormField } from "./FormField";
+import { FormField } from "../ui/FormField";
+
 
 type LoginData = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
-
   const { login } = useAuth();
   const router = useRouter();
 

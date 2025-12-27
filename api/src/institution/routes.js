@@ -4,6 +4,7 @@ import { validateSchema } from "../middleware/validateSchema.js";
 import { institutionSchema } from "./institution.schema.js";
 import { isOwnerOrAdmin } from "../middleware/isOwnerOrAdmin.js";
 import { requirePermission } from "../middleware/requierePermissions.js";
+import { upload } from "../middleware/upload.js";
 import {
   createInstitution,
   getInstitutions,
@@ -16,7 +17,7 @@ import { isAdmin } from "../middleware/isAdmin.js";
 const router = Router();
 
 // Crear institución
-router.post("/", authRequired,  requirePermission("INST_CREATE"), validateSchema(institutionSchema), createInstitution);
+router.post("/", authRequired,  requirePermission("INST_CREATE"), upload.single("logo"), createInstitution);
 
 // Editar institución owner o superadmin
 router.patch("/:id", authRequired, isOwnerOrAdmin, validateSchema(institutionSchema), updateInstitution);

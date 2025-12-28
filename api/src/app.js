@@ -33,12 +33,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan("dev"));
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 // rutas
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-app.use("api/permissions", permissionsRoute)
+app.use("/api/permissions", permissionsRoute)
 app.use("/api/institutions", institutionRoutes);
 app.use("/api/services", serviceRoutes);
 
@@ -50,6 +48,8 @@ app.use("/api/system", systemRoutes);
 
 
 // ... después de tus middlewares de express.json()
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 export default app;

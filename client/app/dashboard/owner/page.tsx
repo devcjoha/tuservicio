@@ -1,9 +1,11 @@
 "use client";
+import { useInstitutions } from "@/context/InstitutionsContext";
 import { useAuth } from "@/hooks/useAuth";
-
 
 export default function OwnerDashboard() {
   const { user } = useAuth()
+  const { institutions } = useInstitutions();
+ console.log("OWNER DASH institutions", institutions);
  
   const handleFilterChange = (path: string) => {
     console.log("Navegando a o filtrando por:", path);

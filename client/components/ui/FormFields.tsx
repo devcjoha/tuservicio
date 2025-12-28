@@ -1,110 +1,81 @@
-import { Controller, FieldError, Control, useForm } from "react-hook-form";
+import { Controller, FieldError, Control, UseFormRegisterReturn } from "react-hook-form";
 import { Input } from "./Input";
 import { Textarea } from "./Textarea";
 import { Select } from "./Select";
-import { CustomSelect, CustomSelectProps } from "./CustomSelect";
-import { Key } from "react";
-
+import { CustomSelect } from "./CustomSelect";
 
 export type Option = { value: string; label: string };
 
-export type BaseFormFieldProps = {
+export type FormFieldProps = {
   name: string;
   label: string;
-  type?: string; // para input
+  type?: string;
   placeholder?: string;
-  register?: any; // handle de RHF
+  register: UseFormRegisterReturn; 
+  control?: Control<any>; // Necesario para select-custom
   error?: FieldError;
-  fieldType: "input" | "select" | "textarea" | "file";
+  fieldType: "input" | "select" | "textarea" | "file" | "select-custom";
   accept?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  options?: Option[]; // 👈 ahora también para select normal
+  // onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  options?: Option[];
 };
 
-type SelectCustomProps = {
-  name: string;
-  label: string;
-  fieldType: "select-custom";
-  control: Control;
-  error?: { message?: string };
-  options: CustomSelectProps["options"];
-};
-
-type FormFieldProps = BaseFormFieldProps | SelectCustomProps;
-
-export function FormField(props: FormFieldProps) {
-  const {
-    name,
-    label,
-    fieldType,
-    error,
-
-    type,
-    placeholder,
-    accept,
-    onChange,
-    options,
-
-  } = props as any; // 👈 destructuramos todo
-
-  const { register, control, handleSubmit, formState: { errors } } = useForm();
-
-  const errorId = `${label.toLowerCase()}-error`;
+export function FormField({
+  name,
+  label,
+  type = "text",
+  placeholder,
+  register,
+  control,
+  error,
+  fieldType = "input",
+  options,
+  accept,
+  // onChange,
+}: FormFieldProps) {
+  const errorId = `${name}-error`;
 
   return (
     <div className="flex flex-col gap-1">
       <label className="text-sm font-medium">{label}</label>
 
-      {fieldType === "input" && (
+      {/* Inputs de Texto y Archivos */}
+      {(fieldType === "input" || fieldType === "file") && (
         <Input
-          {...register(name)}
+          {...register} // Aquí ya viene el name y los handlers del padre
           type={type}
-          placeholder={placeholder || label}
-          error={!!error}
-          errorMessage={error?.message}
-          aria-invalid={!!error}
-          aria-describedby={error ? errorId : undefined}
-        />
-      )}
-
-      {fieldType === "textarea" && (
-        <Textarea
-          {...register(name)}
-          label={label}
+          accept={accept}
           placeholder={placeholder || label}
           error={!!error}
           errorMessage={error?.message}
         />
       )}
 
+      {/* Select Normal (Nativo) */}
       {fieldType === "select" && (
         <Select
-          {...register(name)}
+          {...register}
           label={label}
           error={!!error}
           errorMessage={error?.message}
         >
           <option value="">Seleccionar</option>
-          {options?.map((opt: { value: string | undefined; label: string | undefined; }, index: Key | null | undefined) => (
-            <option
-              key={index}
-              value={opt.value}
-              className="bg-red-300 border-none"
-            >
+          {options?.map((opt, index) => (
+            <option key={index} value={opt.value}>
               {opt.label}
             </option>
           ))}
         </Select>
       )}
 
-      {fieldType === "select-custom" && (
+      {/* Select Personalizado (Requiere Controller) */}
+      {fieldType === "select-custom" && control && (
         <Controller
           name={name}
           control={control}
           render={({ field, fieldState }) => (
             <CustomSelect
-              // label={label}
-              options={options}
+              options={options || []}
               value={field.value}
               onChange={field.onChange}
               error={!!fieldState.error}
@@ -114,17 +85,15 @@ export function FormField(props: FormFieldProps) {
         />
       )}
 
-      {fieldType === "file" && (
-        <Input
-          {...register(name)}
-          type="file"
-          accept={accept}
-          onChange={onChange}
-          aria-invalid={!!error}
-          aria-describedby={error ? errorId : undefined}
-          className="w-full border rounded-md px-3 py-2"
+      {/* Textarea */}
+      {fieldType === "textarea" && (
+        <Textarea
+          {...register}
+          placeholder={placeholder || label}
+          error={!!error}
+          errorMessage={error?.message}
         />
       )}
     </div>
   );
-}
+};

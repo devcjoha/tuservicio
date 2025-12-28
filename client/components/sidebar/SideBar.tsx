@@ -46,9 +46,11 @@ function SideBar({ variant }: SidebarProps) {
 
         {/* Cerrar Sesión (Desktop siempre visible, Mobile dentro de 'Más') */}
         {variant === "desktop" && (
+          // <Link href={"/"}>
           <button onClick={logout} className="mt-auto flex gap-3 p-3 text-accent">
              <LogOut /> <span>Cerrar sesión</span>
-           </button>
+            </button>
+          // </Link>
         )}
       </ul>
 

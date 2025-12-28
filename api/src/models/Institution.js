@@ -55,11 +55,6 @@ const institutionSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    // services: {
-    //   type: [String],
-    //   ref: "Services",
-    //   default: [],
-    // },
   },
   {
     timestamps: true,

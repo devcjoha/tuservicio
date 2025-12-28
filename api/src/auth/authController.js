@@ -3,8 +3,6 @@ import jwt from "jsonwebtoken";
 import { jwt_secret, isProduction } from "../../config.js";
 import permissions from "../config/permissions.json" with {type: "json"};
 
-
-
 // ✅ Generar JWT
 const generateToken = (userId, role) => {
   return jwt.sign({ userId, role }, jwt_secret, {
@@ -29,9 +27,10 @@ export const register = async (req, res) => {
       email,
       password,
       role: "user", // por defecto user
-      permissions: permissions.roles["user"]
+      isActive: true,
+      permissions: permissions.roles["user"],
     });
-
+    // newUser.isActive = true;
     await newUser.save();
 
     const permisos = permissions.roles[newUser.role];
@@ -54,7 +53,8 @@ export const register = async (req, res) => {
         name: newUser.name,
         email: newUser.email,
         role: newUser.role,
-        permissions: permisos || []
+        permissions: permisos || [],
+        isActive: true
       },
     });
   } catch (error) {
@@ -84,6 +84,10 @@ export const login = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: "Comtraseña inválida" });
     }
+    // Cambiar el status isActive a true
+    await User.findByIdAndUpdate( 
+          user._id, { $set: { isActive: true } }, 
+          { new: true } ); 
 
     // Generar token
     const token = generateToken(user._id, user.role);
@@ -99,6 +103,8 @@ export const login = async (req, res) => {
     });
 
    const permisos = user.permissions || permissions.roles[user.role];
+   
+
 return res.status(200).json({
   message: "Login exitoso",
   user: {
@@ -106,7 +112,8 @@ return res.status(200).json({
     name: user.name,
     email: user.email,
     role: user.role,
-    permissions: permisos
+    permissions: permisos,
+    isActive: true
   },
 });
   } catch (error) {
@@ -118,13 +125,28 @@ return res.status(200).json({
 // ✅ Logout
 export const logout = async (req, res) => {
   try {
+    const { id } = req.user; 
+   if ( !id) { 
+    return res.status(401).json({ message: "No autorizado" }); }
+
+    const updateUser = await User.findByIdAndUpdate( 
+      id, { $set: { isActive: false } }, { new: true, runValidators: true } ).lean();; 
+
+      if (!updateUser) { return res.status(404).json({ message: "Usuario no encontrado" }); }
+// Si usas express-session: destruir la sesión 
+    if (req.session) {
+      req.session.destroy(err => {
+        if (err) console.error("Error destroying session:", err);
+      });
+    }
     // Borramos la cookie 'token' poniéndole una fecha de expiración pasada
-    res.cookie("token", "", {
+    res.clearCookie("token", "", {
       httpOnly: true,
       secure: isProduction, // Asegúrate de tener esta variable importada
       sameSite: isProduction ? "strict" : "lax",
-      expires: new Date(0),
-      path: "/",
+      maxAge: 0,
+      // expires: new Date(0),
+      // path: "/",
     });
     
     return res.status(200).json({ message: "Sesión cerrada correctamente" });

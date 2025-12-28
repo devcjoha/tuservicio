@@ -22,7 +22,7 @@ router.post("/", authRequired,  requirePermission("INST_CREATE"), upload.single(
 // Editar institución owner o superadmin
 router.patch("/:id", authRequired, isOwnerOrAdmin, validateSchema(institutionSchema), updateInstitution);
 
-// Solo admin o superadmin pueden ver TODAS las instituciones
+// Ver TODAS las instituciones
 router.get("/", authRequired, getInstitutions);
 
 // Ver una institución específica (admin, superadmin o owner)

@@ -7,13 +7,13 @@ export const createInstitution = async (req, res) => {
   try {
     const userId = req.user.id; 
     const { name, type, email, phone, address, rif } = req.body;
-    const image = req.file;
 
-    const logoPath = req.file ? `/uploads/logos/${req.file.filename}` : null;
-    
+    const image = req.file;
+    if (!image) {
+      return res.status(400).json({ message: "El logo es obligatorio" });
+    }
     const imageCloudinary = await uploadImage(image);
 
-    console.log("INST CONTROLLER", imageCloudinary)
     // Crear institución
       const newInstitution = await Institution.create({ 
       name, 
@@ -22,7 +22,7 @@ export const createInstitution = async (req, res) => {
       phone, 
       address, 
       rif, 
-      logo: logoPath, 
+      logo: imageCloudinary.secure_url, 
       ownerId: userId 
     });
 
@@ -35,7 +35,7 @@ export const createInstitution = async (req, res) => {
     }
     
     res.status(201).json({
-      message: "Institución creada correctamente",
+      message: "Empresa creada correctamente",
       institution: newInstitution,
       user: {
         id: user._id,
@@ -48,38 +48,42 @@ export const createInstitution = async (req, res) => {
    
   } catch (error) {
     console.error("Error en createInstitution:", error);
-    res.status(500).json({ message: "Error en el servidor" });
+    res.status(500).json({ message: "Error en el servidor" || "Error Interno" });
   }
 };
 
 // Traer listado de instituciones según rol
 export const getInstitutions = async (req, res) => {
+  
   try {
+    const { id } = req.user
+    if (!id) return res.status(404).json({ message: "Usuario no autenticado" });
+  
+    const userDb = await User.findById(id).select("role").lean();
+    if (!userDb) return res.status(404).json({ message: "Usuario no encontrado" });
+    const { role } = userDb;
+
     // Superadmin → todas
-    if (req.user.role === "superadmin") {
+    if (role === "superadmin") {
       const institutions = await Institution.find();
-      return res.json({ institutions });
+      return res.json({ institutions }).lean();
     }
-
     // Admin → todas
-    if (req.user.role === "admin") {
+    if (role === "admin") {
       const institutions = await Institution.find();
-      return res.json({ institutions });
+      return res.json({ institutions }).lean();
     }
-
     // Owner → solo las suyas
-    if (req.user.role === "owner") {
-      const institutions = await Institution.find({ ownerId: req.user.id });
+    if (role === "owner") {
+      const institutions = await Institution.find({ ownerId: id }).lean();
       return res.json({ institutions });
     }
-
     return res.status(403).json({ message: "No tienes permisos para esta acción" });
   } catch (error) {
     console.error("Error al obtener instituciones:", error);
     res.status(500).json({ message: "Error en el servidor" });
   }
 };
-
 
 export const getInstitution = async (req, res) => {
   try {

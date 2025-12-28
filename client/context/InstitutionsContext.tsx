@@ -3,10 +3,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { apiFetch } from "@/lib/api";
-// import { z } from "zod";
-// import { institutionSchema } from "@/utils/validationSchemas";
 
-export interface BaseInstitution {
+
+export type Institution = {
+  id?: string; //opcional en el form 
   name: string;
   type: string;
   phone: string;
@@ -14,18 +14,9 @@ export interface BaseInstitution {
   rif: string;
   address: string;
   ownerId: string;
+  logo?: FileList; // en el form será FileList 
+  active?: boolean; // opcional, lo devuelve la API 
 }
-// 1. Para el Formulario (Input): Base + el logo como FileList
-export type InstitutionForm = BaseInstitution & {
-  logo: FileList;
-};
-// 2. Para la API (Output): Base + logo como string + ID y estado
-export type Institution = BaseInstitution & {
-  id: string; // Aquí está el ID de la base de datos
-  logo: string; // Aquí es la ruta/URL
-  active: boolean;
-};
-
 
 export type InstitutionContextType = {
   institutions: Institution[];
@@ -41,17 +32,18 @@ export const InstitutionProvider = ({ children }: { children: React.ReactNode })
   const { user, setUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   useEffect(() => {
     const getInstitutions = async () => {
       setLoading(true);
-      try {
-
-        if (user?.id && user.role === "owner") {
-          const res = await  apiFetch(`/institutions`)
-            setInstitutions(res.institutions || []);
-        
-        }
+      try { 
+        if (user && user.role === "owner" ) {
+          const res = await apiFetch("/institutions", {
+            method: "GET",
+            timeout: 15000
+          });
+          setInstitutions(res.institutions);
+        } 
       } catch (error) {
         setInstitutions([])
       } finally {
@@ -67,8 +59,8 @@ export const InstitutionProvider = ({ children }: { children: React.ReactNode })
     try {
       const res = await apiFetch("/institutions", {
         method: "POST",
-        // body: JSON.stringify(data),
         body: data,
+        timeout: 15000
       });
 
       if (res.institution) {

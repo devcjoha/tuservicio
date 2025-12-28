@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "", // Aquí se guardará algo como: "/uploads/avatars/170345.png"
     },
+    isActive:{
+      type: Boolean,
+      default: false,
+    }
   },
   {
     timestamps: true,

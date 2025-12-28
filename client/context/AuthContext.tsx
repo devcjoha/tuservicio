@@ -1,7 +1,6 @@
 "use client";
 
 import { apiFetch } from "@/lib/api";
-import router from "next/router";
 import { createContext, useState, useEffect, ReactNode } from "react";
 
 export type RegisterData = {
@@ -13,14 +12,15 @@ export type LoginData = {
     email: string;
   password: string;
 }
-export type Role = "user" | "owner" | "admin" | "superadmin";
+export type Role = "user" | "owner" | "admin" | "superadmin" | "";
 
 export type UserType = {
   id: string;
   name: string;
   email: string;
   role: Role;
-  permissions: string[]
+  permissions: string[],
+  isActive: boolean;
 };
 
 export type AuthContextType = {
@@ -73,7 +73,8 @@ const login = async (data: LoginData) => {
         name: res.user.name,
         email: res.user.email,
         role: res.user.role,
-        permissions: res.user.permissions || []
+        isActive: true,
+        permissions: res.user.permissions || [],
       });
     }
   } catch (err: any) {
@@ -109,12 +110,12 @@ const login = async (data: LoginData) => {
     setIsLoading(true);
     try {
       // 1. Avisamos al backend para que borre la cookie
-      await apiFetch("/auth/logout"); 
-      
-      // 2. Limpiamos el estado local inmediatamente
-      setUser(null);
-      
-      // 3. Opcional: Redirigir al login
+     await apiFetch("/auth/logout/", { 
+      method: "POST", 
+       timeout: 10000,
+     });
+      setUser( null);
+ 
       window.location.href = "/"; 
   
     } catch (error) {

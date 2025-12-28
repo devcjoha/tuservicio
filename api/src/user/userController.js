@@ -2,7 +2,7 @@ import User from "../models/User.js";
 
 export const getUserProfile = async (req, res ) => {
  try {
-    const user = await User.findById(req.user.id).select("-password");
+   const user = await User.findById(req.user.id);
 
     if (!user) {
       return res.status(401).json({ message: "Usuario no encontrado" });

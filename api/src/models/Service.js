@@ -2,37 +2,122 @@ import mongoose from "mongoose";
 
 const serviceSchema = new mongoose.Schema(
   {
-    name: {
+    ownerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
+    title: {
       type: String,
       required: true,
-      trim: true,
+      minlength: 5,
+      maxlength: 100,
     },
-
     description: {
       type: String,
-      trim: true,
-    },
-
-    price: {
-      type: Number,
       required: true,
-      min: 0,
+      maxlength: 2000,
     },
-
-    institutionId: {
+    category: {
+      type: String,
+      required: true,
+      index: true,
+    },
+    subcategory: {
+      type: String,
+    },
+    company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Institution",
-      required: true,
+      ref: "Company",
+      index: true,
     },
-
-    active: {
+    provider: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
+    pricing: {
+      type: {
+        type: String,
+        enum: ["hourly", "fixed", "negotiable", "free"],
+      },
+      amount: Number,
+      currency: {
+        type: String,
+        default: "USD",
+        uppercase: true,
+        minlength: 3,
+        maxlength: 3,
+      },
+      unit: String, // por hora, por proyecto, etc.
+    },
+    location: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        default: "Point",
+      },
+      coordinates: {
+        type: [Number],
+        default: [0, 0],
+      }, // [long, lat]
+    },
+    serviceArea: {
+      type: [String],
+    }, // Zonas donde trabaja
+    availability: {
+      days: {
+        type: [String],
+        enum: [
+          "lunes",
+          "martes",
+          "miércoles",
+          "jueves",
+          "viernes",
+          "sábado",
+          "domingo",
+        ],
+        default: [],
+      }, // ['monday', 'tuesday']
+      hours: {
+        start: String,
+        end: String,
+      },
+      emergency: {
+        type: Boolean,
+        default: false,
+      },
+    },
+    images: [String],
+    ratingsAverage: {
+      type: Number,
+      default: 0,
+    },
+    ratingsCount: {
+      type: Number,
+      default: 0,
+    },
+    featured: {
       type: Boolean,
-      default: true,
+      default: false,
+    },
+    status: {
+      type: String,
+      enum: ["active", "inactive", "paused"],
+      default: "active",
+    },
+    tags: [String],
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
+
+serviceSchema.index({ location: "2dsphere" });
+serviceSchema.index({ category: 1, featured: -1 });
 
 export default mongoose.model("Service", serviceSchema);

@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { authRequired } from "../middleware/authRequired.js";
-import { isSuperAdmin } from "../middleware/isSuperAdmin.js";
+import { authRequired } from "../middleware/auth/authRequired.js";
+import { isSuperAdmin } from "../middleware/auth/isSuperAdmin.js";
 import { updateUserRole } from "./userController.js";
 import { validateSchema } from "../middleware/validateSchema.js";
 import { updateRoleSchema } from "./user.schema.js";
-import { isAdmin } from "../middleware/isAdmin.js";
+import { isAdmin } from "../middleware/auth/isAdmin.js";
 import { upload } from "../middleware/upload.js";
 import { updateUserAvatar } from "./userController.js";
 const router = Router();

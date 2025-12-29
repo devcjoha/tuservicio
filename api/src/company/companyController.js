@@ -1,9 +1,9 @@
-import Institution from "../models/Institution.js";
+import Company from "../models/Company.js";
 import permissions from "../config/permissions.json" with { type: "json" };
 import User from "../models/User.js";
 import { uploadImage } from "../utils/cloudinary.js";
 
-export const createInstitution = async (req, res) => {
+export const createCompany = async (req, res) => {
   try {
     const userId = req.user.id; 
     const { name, type, email, phone, address, rif } = req.body;
@@ -14,8 +14,8 @@ export const createInstitution = async (req, res) => {
     }
     const imageCloudinary = await uploadImage(image);
 
-    // Crear institución
-      const newInstitution = await Institution.create({ 
+    // Crear Compañia
+      const newCompany = await Company.create({ 
       name, 
       type, 
       email, 
@@ -36,7 +36,7 @@ export const createInstitution = async (req, res) => {
     
     res.status(201).json({
       message: "Empresa creada correctamente",
-      institution: newInstitution,
+      company: newCompany,
       user: {
         id: user._id,
         name: user.name,
@@ -47,13 +47,13 @@ export const createInstitution = async (req, res) => {
     });
    
   } catch (error) {
-    console.error("Error en createInstitution:", error);
+    console.error("Error en createCompany:", error);
     res.status(500).json({ message: "Error en el servidor" || "Error Interno" });
   }
 };
 
 // Traer listado de instituciones según rol
-export const getInstitutions = async (req, res) => {
+export const getCompanies = async (req, res) => {
   
   try {
     const { id } = req.user
@@ -65,18 +65,18 @@ export const getInstitutions = async (req, res) => {
 
     // Superadmin → todas
     if (role === "superadmin") {
-      const institutions = await Institution.find();
-      return res.json({ institutions }).lean();
+      const companies = await Company.find();
+      return res.json({ companies }).lean();
     }
     // Admin → todas
     if (role === "admin") {
-      const institutions = await Institution.find();
-      return res.json({ institutions }).lean();
+      const companies = await Company.find();
+      return res.json({ companies }).lean();
     }
     // Owner → solo las suyas
     if (role === "owner") {
-      const institutions = await Institution.find({ ownerId: id }).lean();
-      return res.json({ institutions });
+      const companies = await Company.find({ ownerId: id }).lean();
+      return res.json({ companies });
     }
     return res.status(403).json({ message: "No tienes permisos para esta acción" });
   } catch (error) {
@@ -85,51 +85,51 @@ export const getInstitutions = async (req, res) => {
   }
 };
 
-export const getInstitution = async (req, res) => {
+export const getCompany = async (req, res) => {
   try {
-    const institution = await Institution.findById(req.params.id);
+    const company = await Company.findById(req.params.id);
 
-    if (!institution) {
+    if (!company) {
       return res.status(404).json({ message: "Institución no encontrada" });
     }
 
     res.json({
       message: "Institución obtenida",
-      institution,
+      company,
     });
   } catch (error) {
-    console.error("Error al obtener institución:", error);
+    console.error("Error al obtener Compañia:", error);
     res.status(500).json({ message: "Error en el servidor" });
   }
 };
 
-export const updateInstitution = async (req, res) => {
+export const updateCompany = async (req, res) => {
   try {
-    const institution = await Institution.findByIdAndUpdate(
+    const company = await Company.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
     );
 
-    if (!institution) {
+    if (!company) {
       return res.status(404).json({ message: "Institución no encontrada" });
     }
 
     res.json({
       message: "Institución actualizada",
-      institution,
+      company,
     });
   } catch (error) {
-    console.error("Error al actualizar institución:", error);
+    console.error("Error al actualizar Compañia:", error);
     res.status(500).json({ message: "Error en el servidor" });
   }
 };
 
-export const deleteInstitution = async (req, res) => {
+export const deleteCompany = async (req, res) => {
   try {
-    const institution = await Institution.findByIdAndDelete(req.params.id);
+    const company = await Company.findByIdAndDelete(req.params.id);
 
-    if (!institution) {
+    if (!company) {
       return res.status(404).json({ message: "Institución no encontrada" });
     }
 
@@ -137,7 +137,7 @@ export const deleteInstitution = async (req, res) => {
       message: "Institución eliminada",
     });
   } catch (error) {
-    console.error("Error al eliminar institución:", error);
+    console.error("Error al eliminar Compañia:", error);
     res.status(500).json({ message: "Error en el servidor" });
   }
 };

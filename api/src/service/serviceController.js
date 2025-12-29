@@ -1,12 +1,12 @@
 import Service from "../models/Service.js";
-import Institution from "../models/Institution.js";
+import Company from "../models/Company.js";
 
 export const createService = async (req, res) => {
   try {
-    const { institutionId } = req.body;
+    const { companyId } = req.body;
 
-    const institution = await Institution.findById(institutionId);
-    if (!institution) {
+    const company = await Company.findById(companyId);
+    if (!company) {
       return res.status(404).json({ message: "Institución no encontrada" });
     }
 
@@ -56,11 +56,9 @@ export const getService = async (req, res) => {
 
 export const updateService = async (req, res) => {
   try {
-    const service = await Service.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const service = await Service.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
 
     if (!service) {
       return res.status(404).json({ message: "Servicio no encontrado" });

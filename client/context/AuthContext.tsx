@@ -20,13 +20,13 @@ export type UserType = {
   email: string;
   role: Role;
   permissions: string[],
-  isActive: boolean;
+  status: string[];
 };
 
 export type AuthContextType = {
   user: UserType | null;
   setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
-  isLoading: boolean;
+  loading: boolean;
   error: string | null;
   registerAuth: (data: RegisterData) => Promise<void>;
   login: (data: LoginData) => Promise<void>;
@@ -39,7 +39,7 @@ export const AuthContext = createContext<AuthContextType>({} as AuthContextType)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserType | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // Iniciamos cargando para verificar sesión
+  const [loading, setLoading] = useState(true); // Iniciamos cargando para verificar sesión
   const [error, setError] = useState<string | null>(null);
 
   // 1. Verificar si hay sesión al cargar la app
@@ -52,14 +52,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(null);
         console.log("Sesión no válida o usuario borrado", error);
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
     checkSession();
   }, []);
 
 const login = async (data: LoginData) => {
-  setIsLoading(true);
+  setLoading(true);
   setError(null);
   try {
     const res = await apiFetch("/auth/login", {
@@ -73,7 +73,7 @@ const login = async (data: LoginData) => {
         name: res.user.name,
         email: res.user.email,
         role: res.user.role,
-        isActive: true,
+        status: res.user.status,
         permissions: res.user.permissions || [],
       });
     }
@@ -81,12 +81,12 @@ const login = async (data: LoginData) => {
     setError(err.message || "Error al iniciar sesión");
     throw err;
   } finally {
-    setIsLoading(false);
+    setLoading(false);
   }
 };
 
   const registerAuth = async (data: RegisterData) => {
-    setIsLoading(true);
+    setLoading(true);
     setError(null);
     try {
       const res = await apiFetch("/auth/register", {
@@ -98,7 +98,7 @@ const login = async (data: LoginData) => {
       setError(err.message || "Error al registrarse");
       throw err;
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -107,7 +107,7 @@ const login = async (data: LoginData) => {
   }
 
   const logout = async () => {
-    setIsLoading(true);
+    setLoading(true);
     try {
       // 1. Avisamos al backend para que borre la cookie
      await apiFetch("/auth/logout/", { 
@@ -123,7 +123,7 @@ const login = async (data: LoginData) => {
       // Aunque falle la red, es mejor limpiar el estado local
       setUser(null);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -140,7 +140,7 @@ const login = async (data: LoginData) => {
 
   return (
     <AuthContext.Provider value={{ 
-      user, setUser, isLoading, error, registerAuth, login, logout, clearError, hasPermission
+      user, setUser, loading, error, registerAuth, login, logout, clearError, hasPermission
     }}>
       {children}
     </AuthContext.Provider>

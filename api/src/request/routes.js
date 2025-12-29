@@ -1,21 +1,20 @@
 import { Router } from "express";
-import { authRequired } from "../middleware/authRequired.js";
+import { authRequired } from "../middleware/auth/authRequired.js";
 import { validateSchema } from "../middleware/validateSchema.js";
-import { isOwnerOrAdmin } from "../middleware/isOwnerOrAdmin.js";
-
+import { isOwnerOrAdmin } from "../middleware/auth/isOwnerOrAdmin.js";
 
 const router = Router();
 // Crear una solicitud de servicio (user)
 router.post("/", authRequired);
 
 // Ver estado de solicitudes
-router.get("/my", authRequired );
+router.get("/my", authRequired);
 
 // Buscar Servicios cualquiera registrado y logeado
 router.get("/services", authRequired);
 
-// Ver solicitudes de la institución
-router.get("/:id/institution/:id", authRequired, isOwnerOrAdmin);
+// Ver solicitudes de la Compañia
+router.get("/:id/company/:id", authRequired, isOwnerOrAdmin);
 
 // Cancelar solicitud
 router.patch("/:id/cancel", authRequired, isOwnerOrAdmin);

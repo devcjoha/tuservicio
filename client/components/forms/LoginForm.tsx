@@ -8,12 +8,12 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FormField } from "../ui/FormFields";
-
+import { ErrorBanner } from "@/components/ui/ErrorBanner";
 
 type LoginData = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
-  const { login } = useAuth();
+  const { login, error, clearError } = useAuth();
   const router = useRouter();
 
 
@@ -23,6 +23,7 @@ export default function LoginForm() {
 
 
   const onSubmit = async (data: LoginData) => {
+    clearError();
     try {
       const formData = new FormData();
       console.log("LOGIN", formData);
@@ -33,13 +34,15 @@ export default function LoginForm() {
       await login(data);
       router.push("/dashboard");
     } catch (err) {
-      console.error(err);
-      alert("Login: Error al contactar con el servidor");
+      console.error("Error capturado en el Loginform:", err);
     }
     reset()
   };
 
   return (
+    <div className="w-full">
+      {/* 4. Muestra el banner si existe un error en el contexto */}
+      <ErrorBanner message={error || ""} />
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full">
       <FormField
         name="email"
@@ -66,6 +69,7 @@ export default function LoginForm() {
       >
         Iniciar Sesión
       </Button>
-    </form>
+      </form>
+    </div>
   );
 };

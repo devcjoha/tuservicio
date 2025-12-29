@@ -1,18 +1,18 @@
-import Institution from "../models/Institution.js";
-import Service from "../models/Service.js";
+import Company from "../../models/Company.js";
+import Service from "../../models/Service.js";
 
 export const isOwnerOrAdmin = async (req, res, next) => {
   try {
-    let institutionId = null;
+    let companyId = null;
 
     // ✅ Caso 1: rutas de instituciones → el ID viene en params
-    if (req.baseUrl.includes("institutions") && req.params.id) {
-      institutionId = req.params.id;
+    if (req.baseUrl.includes("companies") && req.params.id) {
+      companyId = req.params.id;
     }
 
-    // ✅ Caso 2: creación de servicios → institutionId viene en el body
+    // ✅ Caso 2: creación de servicios → companyId viene en el body
     if (req.baseUrl.includes("services") && req.method === "POST") {
-      institutionId = req.body.institutionId;
+      companyId = req.body.companyId;
     }
 
     // ✅ Caso 3: edición/eliminación de servicios → buscar el servicio
@@ -21,15 +21,17 @@ export const isOwnerOrAdmin = async (req, res, next) => {
       if (!service) {
         return res.status(404).json({ message: "Servicio no encontrado" });
       }
-      institutionId = service.institutionId;
+      companyId = service.companyId;
     }
 
-    if (!institutionId) {
-      return res.status(400).json({ message: "No se pudo determinar institutionId" });
+    if (!companyId) {
+      return res
+        .status(400)
+        .json({ message: "No se pudo determinar companyId" });
     }
 
-    const institution = await Institution.findById(institutionId);
-    if (!institution) {
+    const company = await Company.findById(companyId);
+    if (!company) {
       return res.status(404).json({ message: "Institución no encontrada" });
     }
 
@@ -40,9 +42,11 @@ export const isOwnerOrAdmin = async (req, res, next) => {
     if (req.user.role === "admin") return next();
 
     // ✅ Owner pasa
-    if (institution.ownerId.toString() === req.user.id) return next();
+    if (company.ownerId.toString() === req.user.id) return next();
 
-    return res.status(403).json({ message: "No tienes permisos para esta acción" });
+    return res
+      .status(403)
+      .json({ message: "No tienes permisos para esta acción" });
   } catch (error) {
     console.error("Error en isOwnerOrAdmin:", error);
     res.status(500).json({ message: "Error en el servidor" });

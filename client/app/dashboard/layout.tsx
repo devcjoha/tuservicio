@@ -3,16 +3,18 @@ import { useAuth } from "@/hooks/useAuth";
 import SideBar from "@/components/sidebar/SideBar";
 import DashboardRouter from "@/components/dashboards/DashBoardRouter";
 import HeaderDashboard from "@/components/header/HeaderDashboard";
+import { ErrorBoundary } from "@/components/ui/ErrorBundary";
 
 
 function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth();
+  const { user, loading } = useAuth();
 
-  if (isLoading) return <div>Cargando sistema...</div>;
+  if (loading) return <div>Cargando sistema...</div>;
   if (!user) return <div>Redirigiendo...</div>;
 
   //Dashboard Layout TODOS
   return (
+    <ErrorBoundary fallback={<div className="p-4 bg-error)] text-white">Error en el dashboard</div>}>
     <DashboardRouter >
       <div className="flex flex-1">
         {/* Sidebar vertical en desktop */}
@@ -32,6 +34,7 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
         <SideBar variant="mobile" />
       </nav>
     </DashboardRouter>
+       </ErrorBoundary >
   );
 }
 export default DashboardLayout;

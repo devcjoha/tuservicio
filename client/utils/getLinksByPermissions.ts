@@ -23,7 +23,7 @@ export type LinkCategory = "main" | "search" | "management" | "account";
 
 type Link = {
   href: string;
-  label: string; 
+  label: string;
   icon: React.ElementType;
   required?: string | string[]; // puede ser string o array 
   category: LinkCategory;
@@ -93,32 +93,32 @@ const allLinks: Link[] = [
     category: "main"
   },
   {
-    href: "/dashboard/user/create-institution",
+    href: "/dashboard/user/create-company",
     label: "Crear Empresa",
     icon: HandHeart,
-    required: "INST_CREATE",
+    required: "COMPANY_CREATE",
     category: "main"
   },
   // OWNER
   {
-    href: "/dashboard/owner/institution/:id/edit-institution",
+    href: "/dashboard/owner/company/:id/edit-company",
     label: "Editar Empresa",
     icon: Pencil,
-    required: "INST_EDIT",
+    required: "COMPANY_EDIT",
     category: "main"
   },
   {
-    href: "/dashboard/owner/institution/:id/delete-institution",
+    href: "/dashboard/owner/company/:id/delete-company",
     label: "Eliminar Empresa",
     icon: Trash2,
-    required: "INST_DELETE",
+    required: "COMPANY_DELETE",
     category: "main"
   },
   {
-    href: "/dashboard/owner/institution/:id",
+    href: "/dashboard/owner/company/:id",
     label: "Ver Mi Empresa",
     icon: Store,
-    required: "INST_VIEW_OWN",
+    required: "COMPANY_VIEW_OWN",
     category: "main"
   },
   {
@@ -150,22 +150,22 @@ const allLinks: Link[] = [
     category: "main"
   },
   //Faltaría:   
-      // "EMP_CREATE",
-      // "EMP_EDIT",
-      // "EMP_DELETE",
+  // "EMP_CREATE",
+  // "EMP_EDIT",
+  // "EMP_DELETE",
 
-      // "REQ_VIEW_INSTITUTION",
-      // "REQ_ASSIGN",
-      // "REQ_UPDATE_STATUS",
-      // "REQ_ACCEPT",
-      // "REQ_REJECT",
+  // "REQ_VIEW_Company",
+  // "REQ_ASSIGN",
+  // "REQ_UPDATE_STATUS",
+  // "REQ_ACCEPT",
+  // "REQ_REJECT",
 
-      // "STATS_VIEW_INSTITUTION"
+  // "STATS_VIEW_Company"
 ];
 export function getLinksByPermissions(user: UserType | null, category?: LinkCategory) {
   if (!user) return [];
   const perms = new Set(user.permissions);
-  
+
   return allLinks.filter(link => {
     // Primero filtramos por categoría si se solicita
     if (category && link.category !== category) return false;
@@ -183,7 +183,7 @@ export function getLinksByPermissions(user: UserType | null, category?: LinkCate
 //   if (!user) return []; const perms = new Set(user.permissions);
 //   return allLinks.filter(link => {
 //     if (!link.required)
-//       return true; // si no requiere permisos → todos lo ven 
+//       return true; // si no requiere permisos → todos lo ven
 //     if (Array.isArray(link.required)) { return link.required.every(req => perms.has(req)); } return perms.has(link.required);
 //   });
 // };

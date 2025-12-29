@@ -1,4 +1,4 @@
-import permissions from "../config/permissions.json" with { type: "json" };
+import permissions from "../../config/permissions.json" with { type: "json" };
 
 export function requirePermission(actionId) {
   return (req, res, next) => {

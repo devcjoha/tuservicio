@@ -27,7 +27,7 @@ export const register = async (req, res) => {
       email,
       password,
       role: "user", // por defecto user
-      isActive: true,
+      status: "active",
       permissions: permissions.roles["user"],
     });
     // newUser.isActive = true;
@@ -54,7 +54,7 @@ export const register = async (req, res) => {
         email: newUser.email,
         role: newUser.role,
         permissions: permisos || [],
-        isActive: true
+        status: newUser.status
       },
     });
   } catch (error) {
@@ -82,7 +82,7 @@ export const login = async (req, res) => {
     // Comparar contraseña
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Comtraseña inválida" });
+      return res.status(400).json({ message: "Contraseña inválida" });
     }
     // Cambiar el status isActive a true
     await User.findByIdAndUpdate( 
@@ -113,7 +113,7 @@ return res.status(200).json({
     email: user.email,
     role: user.role,
     permissions: permisos,
-    isActive: true
+    status:user.status
   },
 });
   } catch (error) {
@@ -130,7 +130,7 @@ export const logout = async (req, res) => {
     return res.status(401).json({ message: "No autorizado" }); }
 
     const updateUser = await User.findByIdAndUpdate( 
-      id, { $set: { isActive: false } }, { new: true, runValidators: true } ).lean();; 
+      id, { $set: { status: "inactive" } }, { new: true, runValidators: true } ).lean();; 
 
       if (!updateUser) { return res.status(404).json({ message: "Usuario no encontrado" }); }
 // Si usas express-session: destruir la sesión 

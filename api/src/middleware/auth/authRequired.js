@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { jwt_secret } from "../../config.js";
+import { jwt_secret } from "../../../config.js";
 
 export const authRequired = (req, res, next) => {
   try {

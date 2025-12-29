@@ -30,6 +30,7 @@ export default function DashboardRouter({ children, className }: DashboardRouter
       owner: "/dashboard/owner",
       admin: "/dashboard/admin",
       superadmin: "/dashboard/superadmin",
+      "": ""
     };
     const target = routes[user.role];
     

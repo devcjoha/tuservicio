@@ -13,13 +13,20 @@
     "REQ_FILTER_LOCATION": "Filtrar servicios por localización",
     "REQ_FILTER_TYPE": "Filtrar servicios por tipo",
     "REQ_FILTER_POPULARITY": "Filtrar servicios por popularidad",
+    
+    "REQ_VIEW_COMPANY": "Ver solicitudes de la Compañia",
+    "REQ_ASSIGN": "Asignar profesional",
+    "REQ_UPDATE_STATUS": "Cambiar estado de solicitud",
+    "REQ_ACCEPT": "Aceptar solicitud",
+    "REQ_REJECT": "Rechazar solicitud",
 
-    "INST_CREATE": "Crear institución (convertirse en owner)",
-    "INST_EDIT": "Editar institución",
-    "INST_DELETE": "Eliminar institución",
-    "INST_TOGGLE_ACTIVE": "Activar/desactivar institución",
-    "INST_VIEW_OWN": "Ver institución propia",
-    "INST_VIEW_ALL": "Ver todas las instituciones",
+    "COMPANY_CREATE": "Crear Compañia (convertirse en owner)",
+    "COMPANY_EDIT": "Editar Compañia",
+    "COMPANY_DELETE": "Eliminar Compañia",
+    "COMPANY_TOGGLE_ACTIVE": "Activar/desactivar Compañia",
+    "COMPANY_VIEW_OWN": "Ver Compañia propia",
+    "COMPANY_VIEW_ALL": "Ver todas las instituciones",
+    "COMPANY_SUSPEND": "Suspender Compañia",
 
     "SERV_CREATE": "Crear servicio",
     "SERV_EDIT": "Editar servicio",
@@ -27,47 +34,39 @@
     "SERV_TOGGLE_ACTIVE": "Activar/desactivar servicio",
     "SERV_VIEW_OWN": "Ver servicios propios",
     "SERV_VIEW_ALL": "Ver todos los servicios",
+    "SERV_SUSPEND": "Suspender servicio",
 
     "EMP_CREATE": "Crear empleado",
     "EMP_EDIT": "Editar empleado",
     "EMP_DELETE": "Eliminar empleado",
 
-    "REQ_VIEW_INSTITUTION": "Ver solicitudes de la institución",
-    "REQ_ASSIGN": "Asignar profesional",
-    "REQ_UPDATE_STATUS": "Cambiar estado de solicitud",
-    "REQ_ACCEPT": "Aceptar solicitud",
-    "REQ_REJECT": "Rechazar solicitud",
-
-    "STATS_VIEW_INSTITUTION": "Ver estadísticas de institución",
+    "STATS_VIEW_COMPANY": "Ver estadísticas de Compañia",
     "STATS_VIEW_GLOBAL": "Ver estadísticas globales",
 
     "USER_SUSPEND": "Suspender usuario",
     "USER_DELETE": "Eliminar usuario",
     "USER_VIEW_ALL": "Ver todos los usuarios",
 
-    "INST_SUSPEND": "Suspender institución",
-    "SERV_SUSPEND": "Suspender servicio",
-
     "DISPUTE_RESOLVE": "Resolver disputas",
     "REVIEW_MODERATE": "Revisar calificaciones",
     "REVIEW_DELETE": "Eliminar calificaciones ofensivas",
-
-    "NOTIF_SEND_GLOBAL": "Enviar notificaciones globales",
     "SUPPORT_RESPOND": "Responder tickets de soporte",
-
+    
     "ROLE_ASSIGN": "Cambiar roles",
     "ROLE_VIEW_HISTORY": "Ver historial de roles",
-
+    
     "LOGS_VIEW_SYSTEM": "Ver logs del sistema",
     "LOGS_VIEW_SECURITY": "Ver logs de seguridad",
     "LOGS_VIEW_AUDIT": "Ver logs de auditoría",
-
+    
     "FEATURE_TOGGLE": "Activar/desactivar features",
+    
     "SYSTEM_CONFIG": "Configurar políticas internas",
     "SYSTEM_MAINTENANCE": "Acciones de mantenimiento",
-    "SYSTEM_EMERGENCY": "Acciones de emergencia"
-  },
+    "SYSTEM_EMERGENCY": "Acciones de emergencia",
 
+    "NOTIF_SEND_GLOBAL": "Enviar notificaciones globales"
+  },
   "roles": {
     "user": [
       "REQ_CREATE",
@@ -78,9 +77,8 @@
       "REQ_FILTER_LOCATION",
       "REQ_FILTER_TYPE",
       "REQ_FILTER_POPULARITY",
-      "INST_CREATE"
+      "COMPANY_CREATE"
     ],
-
     "owner": [
       "REQ_CREATE",
       "REQ_VIEW_STATUS",
@@ -90,11 +88,17 @@
       "REQ_FILTER_LOCATION",
       "REQ_FILTER_TYPE",
       "REQ_FILTER_POPULARITY",
-    
-      "INST_EDIT",
-      "INST_DELETE",
-      "INST_TOGGLE_ACTIVE",
-      "INST_VIEW_OWN",
+
+      "REQ_VIEW_COMPANY",
+      "REQ_ASSIGN",
+      "REQ_UPDATE_STATUS",
+      "REQ_ACCEPT",
+      "REQ_REJECT",
+
+      "COMPANY_EDIT",
+      "COMPANY_DELETE",
+      "COMPANY_TOGGLE_ACTIVE",
+      "COMPANY_VIEW_OWN",
 
       "SERV_CREATE",
       "SERV_EDIT",
@@ -106,43 +110,39 @@
       "EMP_EDIT",
       "EMP_DELETE",
 
-      "REQ_VIEW_INSTITUTION",
-      "REQ_ASSIGN",
-      "REQ_UPDATE_STATUS",
-      "REQ_ACCEPT",
-      "REQ_REJECT",
-
-      "STATS_VIEW_INSTITUTION"
+      "STATS_VIEW_COMPANY"
     ],
-
     "admin": [
-      "INST_VIEW_ALL",
-      "SERV_VIEW_ALL",
+      "COMPANY_VIEW_ALL",
+      "COMPANY_SUSPEND",
+
       "USER_VIEW_ALL",
-      "REQ_VIEW_INSTITUTION",
+      "USER_SUSPEND",
+
+      "REQ_VIEW_COMPANY",
       "REQ_VIEW_STATUS",
 
-      "INST_SUSPEND",
+      "SERV_VIEW_ALL",
       "SERV_SUSPEND",
-      "USER_SUSPEND",
 
       "DISPUTE_RESOLVE",
       "REVIEW_MODERATE",
       "REVIEW_DELETE",
-
+      "SUPPORT_RESPOND",
+      
       "STATS_VIEW_GLOBAL",
-      "NOTIF_SEND_GLOBAL",
-      "SUPPORT_RESPOND"
+      
+      "NOTIF_SEND_GLOBAL"
     ],
 
     "superadmin": [
       "ROLE_ASSIGN",
       "ROLE_VIEW_HISTORY",
 
-      "INST_EDIT",
-      "INST_DELETE",
-      "INST_VIEW_ALL",
-      "INST_SUSPEND",
+      "COMPANY_EDIT",
+      "COMPANY_DELETE",
+      "COMPANY_VIEW_ALL",
+      "COMPANY_SUSPEND",
 
       "SERV_EDIT",
       "SERV_DELETE",
@@ -158,11 +158,12 @@
       "LOGS_VIEW_AUDIT",
 
       "FEATURE_TOGGLE",
+
       "SYSTEM_CONFIG",
       "SYSTEM_MAINTENANCE",
       "SYSTEM_EMERGENCY",
-
       "STATS_VIEW_GLOBAL"
+
     ]
   }
 }

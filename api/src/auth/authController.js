@@ -59,7 +59,7 @@ export const register = async (req, res) => {
     });
   } catch (error) {
     console.error("Error en register:", error);
-    res.status(500).json({ message: "Error en el servidor" });
+ res.status(500).json({ error: true, message: error.message });
   }
 };
 
@@ -106,7 +106,7 @@ export const login = async (req, res) => {
    
 
 return res.status(200).json({
-  message: "Login exitoso",
+  message: "¡Login exitoso!",
   user: {
     id: user._id,
     name: user.name,
@@ -118,7 +118,7 @@ return res.status(200).json({
 });
   } catch (error) {
     console.error("Error en login:", error);
-    res.status(500).json({ message: "Error en el servidor" });
+   res.status(500).json({ error: true, message: error.message });
   }
 };
 
@@ -152,6 +152,6 @@ export const logout = async (req, res) => {
     return res.status(200).json({ message: "Sesión cerrada correctamente" });
   } catch (error) {
     console.error("Error en logout:", error);
-    res.status(500).json({ message: "Error al cerrar sesión" });
+    res.status(500).json({ error: true, message: error.message });
   }
 };

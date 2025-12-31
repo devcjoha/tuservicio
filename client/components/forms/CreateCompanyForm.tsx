@@ -9,6 +9,7 @@ import { FormField } from "../ui/FormFields";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { ImageUploadField } from "@/utils/ImageUploadField";
+import { useModal } from "@/hooks/useModal";
 
 
 export default function CreateCompanyForm() {
@@ -16,6 +17,7 @@ export default function CreateCompanyForm() {
   const { user } = useAuth();
   const router = useRouter();
   const userId = user ? user.id : "";
+  const { close } = useModal();
 
   const { register, control, handleSubmit, formState: { errors, isSubmitting }, reset, watch } = useForm<Company>({
     resolver: zodResolver(companySchema),
@@ -46,15 +48,15 @@ export default function CreateCompanyForm() {
       // 4. Enviar al contexto
       await createCompany(formData);
 
-
       if (user?.role === "owner") {
         router.push("/dashboard");
       }
-      reset();
+      setTimeout(() => { close(); }, 1000);
     } catch (err) {
-      console.error(err);
-      alert("Error al crear la Compañia");
+      console.error("Create Company form", err);
+      setTimeout(() => { close(); }, 5000);
     }
+    reset();
   };
 
   return (

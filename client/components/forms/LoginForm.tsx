@@ -8,41 +8,42 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FormField } from "../ui/FormFields";
-import { ErrorBanner } from "@/components/ui/ErrorBanner";
+import { useModal } from "@/hooks/useModal";
 
 type LoginData = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
-  const { login, error, clearError } = useAuth();
+  const { login, clearError } = useAuth();
   const router = useRouter();
-
+  const { close } = useModal();
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm<LoginData>({
     resolver: zodResolver(loginSchema),
   });
 
-
   const onSubmit = async (data: LoginData) => {
     clearError();
     try {
       const formData = new FormData();
-      console.log("LOGIN", formData);
-
+      
       // 2. Agregar campos de texto
       formData.append("email", data.email);
       formData.append("password", data.password);
       await login(data);
+      console.log("LOGIN", );
+
       router.push("/dashboard");
+      setTimeout(() => { close(); }, 1000);
     } catch (err) {
-      console.error("Error capturado en el Loginform:", err);
+      console.error("Login Form:", err);
+      setTimeout(() => { close(); }, 5000);
     }
     reset()
   };
 
   return (
     <div className="w-full">
-      {/* 4. Muestra el banner si existe un error en el contexto */}
-      <ErrorBanner message={error || ""} />
+     
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full">
       <FormField
         name="email"

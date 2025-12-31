@@ -3,6 +3,7 @@ import { Role } from "@/context/AuthContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { LoadingCard } from "../feedbacks/LoadingCard";
 
 type DashboardRouterProps = {
   children?: React.ReactNode;
@@ -10,13 +11,13 @@ type DashboardRouterProps = {
 };
 
 export default function DashboardRouter({ children, className }: DashboardRouterProps) {
-  const { user, isLoading } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     
     // Si todavía estamos validando la cookie de sesión, no hacemos nada
-    if (isLoading) return;
+    if (loading) { <LoadingCard message={"Cargando sesión..."} />; return; }
 
     // Si terminó de cargar y no hay usuario, al login
     if (!user) {
@@ -37,11 +38,11 @@ export default function DashboardRouter({ children, className }: DashboardRouter
     if (target) {
       router.push(target);
     }
-  }, [user, isLoading, router]);
+  }, [user, loading, router]);
 
   return( 
     <section className={className} >
-       {children ?? <p>Cargando sesión...</p>}
+      {children ?? <LoadingCard message={"Cargando sesión..."}/>}
     </section>
   );
 }

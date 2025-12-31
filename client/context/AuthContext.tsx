@@ -2,6 +2,7 @@
 
 import { apiFetch } from "@/lib/api";
 import { createContext, useState, useEffect, ReactNode } from "react";
+import { useModal } from "@/hooks/useModal";
 
 export type RegisterData = {
   name: string;
@@ -9,7 +10,7 @@ export type RegisterData = {
   password: string;
 };
 export type LoginData = {
-    email: string;
+  email: string;
   password: string;
 }
 export type Role = "user" | "owner" | "admin" | "superadmin" | "";
@@ -32,7 +33,7 @@ export type AuthContextType = {
   login: (data: LoginData) => Promise<void>;
   logout: () => void;
   clearError: () => void;
-   hasPermission: (actionId: string) => boolean;
+  hasPermission: (actionId: string) => boolean;
 };
 
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -41,6 +42,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true); // Iniciamos cargando para verificar sesión
   const [error, setError] = useState<string | null>(null);
+  const { open, close } = useModal();
 
   // 1. Verificar si hay sesión al cargar la app
   useEffect(() => {
@@ -58,32 +60,55 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     checkSession();
   }, []);
 
-const login = async (data: LoginData) => {
-  setLoading(true);
-  setError(null);
-  try {
-    const res = await apiFetch("/auth/login", {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
+  const login = async (data: LoginData) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await apiFetch("/auth/login", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+      console.log("AUTH CONTEXT RES", res);
 
-    if (res.user) {
+      if (!res.user) {
+        const apiError = res.message
+        setError(apiError);
+        open({
+          title: "Error de autenticación",
+          message: apiError,
+          variant: "error",
+          onClose: () => setError(null),
+        });
+        return null;
+      }
       setUser({
-        id: res.user.id || res.user._id, 
+        id: res.user.id || res.user._id,
         name: res.user.name,
         email: res.user.email,
         role: res.user.role,
         status: res.user.status,
         permissions: res.user.permissions || [],
       });
+      open({
+        title: `Bienvenido ${res.user.name}`,
+        message: res.message,
+        variant: "success",
+      });
+      return res
+
+    } catch (err: any) {
+      setError(err.message || "Error al iniciar sesión");
+      open({
+        title: "Error de autenticación",
+        message: err.message,
+        variant: "error",
+        onClose: () => setError(null),
+      });
+      throw err;
+    } finally {
+      setLoading(false);
     }
-  } catch (err: any) {
-    setError(err.message || "Error al iniciar sesión");
-    throw err;
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const registerAuth = async (data: RegisterData) => {
     setLoading(true);
@@ -93,16 +118,40 @@ const login = async (data: LoginData) => {
         method: "POST",
         body: JSON.stringify(data),
       });
+      if (!res.user) {
+        const apiError = res.message
+        setError(apiError);
+        open({
+          title: "Error de autenticación",
+          message: apiError,
+          variant: "error",
+          onClose: () => setError(null),
+        });
+        throw new Error(apiError);
+      }
       setUser(res.user);
+      open({
+        title: `Bienvenido ${res.user.name}`,
+        message: res.message,
+        variant: "success",
+      });
+      close();
     } catch (err: any) {
-      setError(err.message || "Error al registrarse");
+      setError(err.message);
+      open({
+        title: "Error de Registro",
+        message: err.message,
+        variant: "error",
+        onClose: () => setError(null),
+      });
       throw err;
     } finally {
       setLoading(false);
+      setError(null);
     }
   };
 
-   function hasPermission(actionId: string) {
+  function hasPermission(actionId: string) {
     return user?.permissions.includes(actionId) ?? false;
   }
 
@@ -110,14 +159,14 @@ const login = async (data: LoginData) => {
     setLoading(true);
     try {
       // 1. Avisamos al backend para que borre la cookie
-     await apiFetch("/auth/logout/", { 
-      method: "POST", 
-       timeout: 10000,
-     });
-      setUser( null);
- 
-      window.location.href = "/"; 
-  
+      await apiFetch("/auth/logout/", {
+        method: "POST",
+        timeout: 10000,
+      });
+      setUser(null);
+
+      window.location.href = "/";
+
     } catch (error) {
       console.error("Error al cerrar sesión", error);
       // Aunque falle la red, es mejor limpiar el estado local
@@ -139,7 +188,7 @@ const login = async (data: LoginData) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ 
+    <AuthContext.Provider value={{
       user, setUser, loading, error, registerAuth, login, logout, clearError, hasPermission
     }}>
       {children}

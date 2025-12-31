@@ -48,7 +48,7 @@ export const createCompany = async (req, res) => {
    
   } catch (error) {
     console.error("Error en createCompany:", error);
-    res.status(500).json({ message: "Error en el servidor" || "Error Interno" });
+    res.status(500).json({ error: true, message: error.message });
   }
 };
 
@@ -81,7 +81,7 @@ export const getCompanies = async (req, res) => {
     return res.status(403).json({ message: "No tienes permisos para esta acción" });
   } catch (error) {
     console.error("Error al obtener instituciones:", error);
-    res.status(500).json({ message: "Error en el servidor" });
+ res.status(500).json({ error: true, message: error.message });
   }
 };
 
@@ -99,7 +99,7 @@ export const getCompany = async (req, res) => {
     });
   } catch (error) {
     console.error("Error al obtener Compañia:", error);
-    res.status(500).json({ message: "Error en el servidor" });
+   res.status(500).json({ error: true, message: error.message });
   }
 };
 
@@ -121,7 +121,7 @@ export const updateCompany = async (req, res) => {
     });
   } catch (error) {
     console.error("Error al actualizar Compañia:", error);
-    res.status(500).json({ message: "Error en el servidor" });
+    res.status(500).json({ error: true, message: error.message });
   }
 };
 
@@ -138,6 +138,6 @@ export const deleteCompany = async (req, res) => {
     });
   } catch (error) {
     console.error("Error al eliminar Compañia:", error);
-    res.status(500).json({ message: "Error en el servidor" });
+    res.status(500).json({ error: true, message: error.message });
   }
 };

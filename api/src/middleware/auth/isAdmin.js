@@ -6,6 +6,6 @@ export const isAdmin = (req, res, next) => {
 
     next();
   } catch (error) {
-    res.status(500).json({ message: "Error en autorización" });
+    res.status(500).json({ error: true, message: error.message || "Error en autorización" });
   }
 };

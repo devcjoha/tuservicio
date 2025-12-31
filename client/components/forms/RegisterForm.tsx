@@ -7,12 +7,15 @@ import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 import z from "zod";
 import { FormField } from "../ui/FormFields";
+import { useModal } from "@/hooks/useModal";
 
 type RegisterData = z.infer<typeof registerSchema>;
 
 export default function RegisterForm() {
   const { registerAuth } = useAuth();
   const router = useRouter();
+  const { close } = useModal();
+
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset } =
     useForm<RegisterData>({
       resolver: zodResolver(registerSchema),
@@ -26,15 +29,16 @@ export default function RegisterForm() {
       formData.append("password", data.password);
       await registerAuth(data);
       router.push("/dashboard");
+      setTimeout(() => { close(); }, 1000);
     } catch (err) {
-      console.error(err);
-      alert("Register: Error en el servidor");
+      console.error("Register:", err);
+      setTimeout(() => { close(); }, 5000);
     }
     reset()
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 w-full">
 
       <FormField
         name="name"
@@ -52,15 +56,16 @@ export default function RegisterForm() {
         error={errors.email}
         fieldType="input"
       />
-
-      <FormField
-        name="password"
-        label="Password"
-        type="password"
-        register={register("password")}
-        error={errors.password}
-        fieldType="input"
-      />
+      <div>
+        <FormField
+          name="password"
+          label="Password"
+          type="password"
+          register={register("password")}
+          error={errors.password}
+          fieldType="input"
+        /><span className="text-[.7rem] text-gray-400 italic space-y-0">(8 min, @$!%*?&, Mayúscula)</span>
+      </div>
 
       <FormField
         name="confirmPassword"

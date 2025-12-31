@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { CompanyProvider } from "@/context/CompanyContext";
+import { ModalProvider } from "@/context/ModalContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -33,11 +34,13 @@ export default function RootLayout({
         className={`${montserrat.variable} ${inter.variable} ${montserrat.className} ${inter.className} antialiased`}
       >
         <ThemeProvider>
+          <ModalProvider>
           <AuthProvider>
             <CompanyProvider>
               {children}
             </CompanyProvider>
-          </AuthProvider>
+            </AuthProvider>
+          </ModalProvider>
         </ThemeProvider>
       </body>
     </html>

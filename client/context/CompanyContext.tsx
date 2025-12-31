@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { apiFetch } from "@/lib/api";
-
+import { useModal } from "@/hooks/useModal";
 
 export type Company = {
   id?: string; //opcional en el form 
@@ -32,6 +32,7 @@ export const CompanyProvider = ({ children }: { children: React.ReactNode }) => 
   const { user, setUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { open } = useModal();
 
   useEffect(() => {
     const getCompanies = async () => {
@@ -44,6 +45,7 @@ export const CompanyProvider = ({ children }: { children: React.ReactNode }) => 
             timeout: 15000
           });
           setCompanies(res.companies);
+          return res;
         }
       } catch (error) {
         setCompanies([])
@@ -65,13 +67,35 @@ export const CompanyProvider = ({ children }: { children: React.ReactNode }) => 
         timeout: 15000
       });
 
-      if (res.company) {
-        setUser(res.user)
-        setCompanies((prev) => [...prev, res.company]);
+      if (!res.company) {
+        const apiError = res.message
+        setError(apiError);
+        open({
+          title: "Error de autenticación",
+          message: apiError,
+          variant: "error",
+          onClose: () => setError(null),
+        });
+        return null;
       }
+      setUser(res.user)
+      setCompanies((prev) => [...prev, res.company]);
+      open({
+        title: `Registro de ${res.company.name}`,
+        message: res.message,
+        variant: "success",
+      });
+      return res
 
     } catch (err: any) {
-      setError(err.message || "CompanyContext: Error al crear Compañia");
+      setError(err.message || "Error al crear Compañia");
+      open({
+        title: "Error de Creación de Compañía",
+        message: err.message,
+        variant: "error",
+        onClose: () => setError(null),
+      });
+      throw err;
     } finally {
       setLoading(false);
     }

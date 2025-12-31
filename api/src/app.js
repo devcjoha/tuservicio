@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-import { frontend_url } from "../config.js";
+import { front_host, frontend_url } from "../config.js";
 import authRoutes from "./auth/index.js";
 import userRoutes from "./user/index.js";
 import permissionsRoute from "./config/index.js";
@@ -21,12 +21,28 @@ import systemRoutes from "./system/index.js";
 
 const app = express();
 
+const allowedOrigins = [
+  frontend_url, front_host, // tu IP local 'http://tu-dominio.com' 
+];
+
 app.use(
   cors({
-    origin: frontend_url,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
+// app.use(
+//   cors({
+//     origin: frontend_url || front_host, 
+//     credentials: true,
+//   })
+// );
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

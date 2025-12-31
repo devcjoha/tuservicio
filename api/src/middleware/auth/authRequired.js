@@ -18,6 +18,6 @@ export const authRequired = (req, res, next) => {
 
     next();
   } catch (error) {
-    return res.status(401).json({ message: "Token inválido o expirado" });
+    return res.status(401).json({ error: true, message: error.message || "Token inválido o expirado" });
   }
 };

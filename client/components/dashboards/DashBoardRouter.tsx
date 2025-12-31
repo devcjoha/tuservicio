@@ -1,7 +1,7 @@
 "use client";
 import { Role } from "@/context/AuthContext";
 import { useAuth } from "@/hooks/useAuth";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { LoadingCard } from "../feedbacks/LoadingCard";
 
@@ -13,18 +13,17 @@ type DashboardRouterProps = {
 export default function DashboardRouter({ children, className }: DashboardRouterProps) {
   const { user, loading } = useAuth();
   const router = useRouter();
-
+  const pathname = usePathname();
+  console.log("DASH ROUTER", pathname);
+  
   useEffect(() => {
     
-    // Si todavía estamos validando la cookie de sesión, no hacemos nada
-    if (loading) { <LoadingCard message={"Cargando sesión..."} />; return; }
-
     // Si terminó de cargar y no hay usuario, al login
     if (!user) {
       router.push("/login");
       return;
     }
-
+    
     // Mapeo de rutas según el rol definido en el controlador
     const routes: Record<Role, string> = {
       user: "/dashboard/user",
@@ -38,11 +37,13 @@ export default function DashboardRouter({ children, className }: DashboardRouter
     if (target) {
       router.push(target);
     }
-  }, [user, loading, router]);
-
+  }, [user, loading, router, pathname]);
+  
+  // Si todavía estamos validando la cookie de sesión, no hacemos nada
+  if (loading) { <LoadingCard message={"Cargando sesión..."} />; return; }
   return( 
     <section className={className} >
-      {children ?? <LoadingCard message={"Cargando sesión..."}/>}
+      {children}
     </section>
   );
 }

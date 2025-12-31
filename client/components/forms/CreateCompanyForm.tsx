@@ -8,7 +8,7 @@ import { Company, useCompanies } from "@/context/CompanyContext";
 import { FormField } from "../ui/FormFields";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { ImageUploadField } from "@/utils/ImageUploadField";
+import { ImageUploadField } from "@/components/ui/ImageUploadField";
 import { useModal } from "@/hooks/useModal";
 
 

@@ -1,189 +1,183 @@
 import { UserType } from "@/context/AuthContext";
+// 1. Importamos el tipo generado automáticamente
+import { ActionType } from "@/types/permissions";
 import {
   Home,
   Search,
-  ClipboardList,
-  Handshake,
-  HandHeart,
-  UserRoundX,
-  UserStar,
-  MapPinHouse,
   MapPinCheck,
-  UserRoundSearch,
   Award,
   Pencil,
   Trash2,
   CirclePlus,
   Store,
   ToggleRight,
-  NotebookTabs
+  NotebookTabs,
+  Users,
+  ShieldCheck,
+  BarChart3,
+  Settings,
+  LogOut,
+  UserCircle,
+  Briefcase,
+  AlertCircle
 } from "lucide-react";
 
-export type LinkCategory = "main" | "search" | "management" | "account";
+export type LinkCategory = "main" | "search" | "management" | "admin" | "account";
 
 type Link = {
   href: string;
   label: string;
   icon: React.ElementType;
-  required?: string | string[]; // puede ser string o array 
+  // 2. Usamos ActionType para que los permisos sean estrictos
+  required?: ActionType | ActionType[];
   category: LinkCategory;
 };
 
 const allLinks: Link[] = [
+  // --- CATEGORÍA: MAIN / USER ---
   {
-    href: "/dashboard/user",
-    label: "Inicio",
+    href: "/dashboard",
+    label: "Panel Principal",
     icon: Home,
     category: "main"
   },
   {
     href: "/dashboard/user/search-services",
-    label: "Todos los servicios",
+    label: "Explorar Servicios",
     icon: Search,
-    required: "REQ_SEARCH",
-    category: "search"
+    required: "REQ_SERV_SEARCH",
+    category: "main"
   },
   {
-    href: "/dashboard",
-    label: "Servicios por zona",
+    href: "/dashboard/user/nearby",
+    label: "Servicios por Zona",
     icon: MapPinCheck,
-    required: "REQ_FILTER_LOCATION",
-    category: "search"
-  },
-  {
-    href: "/dashboard",
-    label: "Servicios por categoría",
-    icon: UserRoundSearch,
-    required: "REQ_FILTER_TYPE",
-    category: "search"
-  },
-  {
-    href: "/dashboard",
-    label: "Servicios más populares",
-    icon: Award,
-    required: "REQ_FILTER_POPULARITY",
-    category: "search"
-  },
-  {
-    href: "/dashboard/user/new-request",
-    label: "Solicitar Servicio",
-    icon: Handshake,
-    required: "REQ_CREATE",
+    required: "REQ_SERV_FILTER_LOCATION",
     category: "main"
   },
-  {
-    href: "/dashboard/user/rate-request",
-    label: "Calificar Servicio",
-    icon: UserStar,
-    required: "REQ_RATE",
-    category: "main"
-  },
-  {
-    href: "/dashboard/user/requests",
-    label: "Mis Solicitudes",
-    icon: ClipboardList,
-    required: "REQ_VIEW_STATUS",
-    category: "main"
-  },
-  {
-    href: "/dashboard/user/cancel-request",
-    label: "Cancelar Solicitud",
-    icon: UserRoundX,
-    required: "REQ_CANCEL",
-    category: "main"
-  },
+
+  // --- CATEGORÍA: MANAGEMENT (Owner / Empresa) ---
   {
     href: "/dashboard/user/create-company",
-    label: "Crear Empresa",
-    icon: HandHeart,
+    label: "Crear mi empresa",
+    icon: Store,
     required: "COMPANY_CREATE",
-    category: "main"
-  },
-  // OWNER
-  {
-    href: "/dashboard/owner/company/:id/edit-company",
-    label: "Editar Empresa",
-    icon: Pencil,
-    required: "COMPANY_EDIT",
-    category: "main"
+    category: "management"
   },
   {
-    href: "/dashboard/owner/company/:id/delete-company",
-    label: "Eliminar Empresa",
-    icon: Trash2,
-    required: "COMPANY_DELETE",
-    category: "main"
-  },
-  {
-    href: "/dashboard/owner/company/:id",
-    label: "Ver Mi Empresa",
+    href: "/dashboard/owner/my-company",
+    label: "Mi Empresa",
     icon: Store,
     required: "COMPANY_VIEW_OWN",
-    category: "main"
+    category: "management"
   },
   {
-    href: "/dashboard/owner/new-service",
+    href: "/dashboard/owner/services",
+    label: "Mis Servicios",
+    icon: NotebookTabs,
+    required: "SERV_VIEW_OWN",
+    category: "management"
+  },
+  {
+    href: "/dashboard/owner/services/new",
     label: "Nuevo Servicio",
     icon: CirclePlus,
     required: "SERV_CREATE",
-    category: "main"
+    category: "management"
   },
   {
-    href: "/dashboard/owner/delete-service",
-    label: "Eliminar Servicio",
-    icon: Trash2,
-    required: "SERV_DELETE",
-    category: "main"
+    href: "/dashboard/owner/employees",
+    label: "Equipo / Empleados",
+    icon: Users,
+    required: "EMP_CREATE",
+    category: "management"
   },
   {
-    href: "/dashboard/owner",
-    label: "Mi Servicios",
-    icon: NotebookTabs,
-    required: "SERV_VIEW_OWN",
-    category: "main"
+    href: "/dashboard/owner/stats",
+    label: "Estadísticas",
+    icon: BarChart3,
+    required: "STATS_VIEW_COMPANY",
+    category: "management"
   },
-  {
-    href: "/dashboard/owner",
-    label: "Activar/Desactivar Servicio",
-    icon: ToggleRight,
-    required: "SERV_TOGGLE_ACTIVE",
-    category: "main"
-  },
-  //Faltaría:   
-  // "EMP_CREATE",
-  // "EMP_EDIT",
-  // "EMP_DELETE",
 
-  // "REQ_VIEW_Company",
-  // "REQ_ASSIGN",
-  // "REQ_UPDATE_STATUS",
-  // "REQ_ACCEPT",
-  // "REQ_REJECT",
+  // --- CATEGORÍA: ADMIN (Global Management) ---
+  {
+    href: "/dashboard/admin/users",
+    label: "Gestión de Usuarios",
+    icon: ShieldCheck,
+    required: "USER_VIEW_ALL",
+    category: "admin"
+  },
+  {
+    href: "/dashboard/admin/companies",
+    label: "Control de Empresas",
+    icon: Briefcase,
+    required: "COMPANY_VIEW_ALL",
+    category: "admin"
+  },
+  {
+    href: "/dashboard/admin/disputes",
+    label: "Disputas / Soporte",
+    icon: AlertCircle,
+    required: "DISPUTE_RESOLVE",
+    category: "admin"
+  },
 
-  // "STATS_VIEW_Company"
+  // --- CATEGORÍA: ACCOUNT ---
+  {
+    href: "/dashboard/profile",
+    label: "Mi Perfil",
+    icon: UserCircle,
+    required: "AUTH_PROFILE",
+    category: "account"
+  },
+  {
+    href: "/dashboard/settings",
+    label: "Configuración",
+    icon: Settings,
+    category: "account"
+  }
 ];
+
+/**
+ * Filtra los links basándose en los permisos reales del usuario
+ */
 export function getLinksByPermissions(user: UserType | null, category?: LinkCategory) {
   if (!user) return [];
-  const perms = new Set(user.permissions);
 
-  return allLinks.filter(link => {
-    // Primero filtramos por categoría si se solicita
-    if (category && link.category !== category) return false;
-
-    // Luego filtramos por permisos
+  const filtered = allLinks.filter((link) => {
+    // Si no requiere permiso, es público para logueados
     if (!link.required) return true;
-    if (Array.isArray(link.required)) {
-      return link.required.every(req => perms.has(req));
-    }
-    return perms.has(link.required);
-  });
-};
 
-// export function getLinksByPermissions(user: UserType | null) {
-//   if (!user) return []; const perms = new Set(user.permissions);
+    // Si es un array de permisos, debe tener al menos uno (OR)
+    if (Array.isArray(link.required)) {
+      return link.required.some((perm) => user.permissions.includes(perm));
+    }
+
+    // Si es un solo permiso
+    return user.permissions.includes(link.required);
+  });
+
+  // Si se pide una categoría específica, filtramos por ella
+  if (category) {
+    return filtered.filter((link) => link.category === category);
+  }
+
+  return filtered;
+};
+// export function getLinksByPermissions(user: UserType | null, category?: LinkCategory) {
+//   if (!user) return [];
+//   const perms = new Set(user.permissions);
+
 //   return allLinks.filter(link => {
-//     if (!link.required)
-//       return true; // si no requiere permisos → todos lo ven
-//     if (Array.isArray(link.required)) { return link.required.every(req => perms.has(req)); } return perms.has(link.required);
+//     // Primero filtramos por categoría si se solicita
+//     if (category && link.category !== category) return false;
+
+//     // Luego filtramos por permisos
+//     if (!link.required) return true;
+//     if (Array.isArray(link.required)) {
+//       return link.required.every(req => perms.has(req));
+//     }
+//     return perms.has(link.required);
 //   });
 // };

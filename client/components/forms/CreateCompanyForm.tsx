@@ -16,7 +16,7 @@ export default function CreateCompanyForm() {
   const { createCompany } = useCompanies();
   const { user } = useAuth();
   const router = useRouter();
-  const userId = user ? user.id : "";
+  const userId = user ? user._id : "";
   const { close } = useModal();
 
   const { register, control, handleSubmit, formState: { errors, isSubmitting }, reset, watch } = useForm<Company>({

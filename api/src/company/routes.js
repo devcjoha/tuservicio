@@ -51,6 +51,11 @@ router.patch("/:id/suspend", authRequired, isAdmin);
 router.patch("/:id/toggle", authRequired, isOwnerOrAdmin);
 
 // Eliminar Compañia (owner o superadmin)
-router.delete("/:id", authRequired, isOwnerOrAdmin, deleteCompany);
+router.delete(
+  "/:id",
+  authRequired,
+  requirePermission("COMPANY_DELETE"),
+  deleteCompany
+);
 
 export default router;

@@ -78,20 +78,32 @@ export const login = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "Email o contraseña inválidas" });
     }
+console.log("LOGIN", user);
 
     // Comparar contraseña
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(400).json({ message: "Contraseña inválida" });
     }
-    // Cambiar el status isActive a true
-    await User.findByIdAndUpdate( 
-          user._id, { $set: { isActive: true } }, 
-          { new: true } ); 
 
+    const permisosJson = permissions.roles[user.role];
+    const permisosActualizados = JSON.stringify(user.permissions) !== JSON.stringify(permisosJson); const userUpdate = await User.findByIdAndUpdate(user._id, {
+      $set: {
+        status: "active", // ✅ siempre actualizamos status 
+        permissions: permisosActualizados ? permisosJson : user.permissions
+      }
+    }, { new: true, runValidators: true }).lean();
+    
+    // const userUpdate = await User.findByIdAndUpdate(user._id)
+    // userUpdate.status = "active";
+    // if (userUpdate.permissions !== user.permissions) {
+    //   user.permissions = permissions.roles[user.role]; }
+    // await userUpdate.save();
+    
     // Generar token
     const token = generateToken(user._id, user.role);
-
+    
+    // Limpiar caché para evitar redirecciones viejas
     res.setHeader('Cache-Control', 'no-store');
     // Enviar cookie segura
     res.cookie("token", token, {
@@ -102,18 +114,15 @@ export const login = async (req, res) => {
       path: "/",
     });
 
-   const permisos = user.permissions || permissions.roles[user.role];
-   
-
 return res.status(200).json({
   message: "¡Login exitoso!",
   user: {
-    id: user._id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
-    permissions: permisos,
-    status:user.status
+  id: userUpdate._id,
+        name: userUpdate.name,
+        email: userUpdate.email,
+        role: userUpdate.role,
+        permissions: userUpdate.permissions, // Ahora sí vienen de la DB actualizados
+        status: "active"
   },
 });
   } catch (error) {

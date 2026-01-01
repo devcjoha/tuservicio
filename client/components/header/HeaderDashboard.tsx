@@ -7,9 +7,9 @@ import Logo from "../icons/Logo";
 
 function HeaderDashboard() {
   const { user } = useAuth();
-  const { companies, loading } = useCompanies();
 
-  const hello = companies.length === 0 ? <p>Hola <span className="font-bold">{user?.name}!</span> </p> : <p>Hola {companies[0].name} </p>
+
+  const hello = user ? <p>Hola <span className="font-bold">{user?.name}!</span></p> : null
 
   return (
 

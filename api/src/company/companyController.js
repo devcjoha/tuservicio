@@ -2,7 +2,14 @@ import Company from "../models/Company.js";
 import permissions from "../config/permissions.json" with { type: "json" };
 import User from "../models/User.js";
 import { uploadImage } from "../utils/cloudinary.js";
+import jwt from "jsonwebtoken";
+import { jwt_secret, isProduction } from "../../config.js";
 
+const generateToken = (userId, role) => {
+  return jwt.sign({ userId, role }, jwt_secret, {
+    expiresIn: "7d",
+  });
+};
 export const createCompany = async (req, res) => {
   try {
     const userId = req.user.id; 
@@ -33,7 +40,13 @@ export const createCompany = async (req, res) => {
       user.permissions = permissions.roles["owner"];
       await user.save();
     }
-    
+    // Re-generar token con rol 'owner'
+    const token = generateToken(user._id, user.role); 
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "strict" : "lax",
+    });
     res.status(201).json({
       message: "Empresa creada correctamente",
       company: newCompany,
@@ -65,13 +78,13 @@ export const getCompanies = async (req, res) => {
 
     // Superadmin → todas
     if (role === "superadmin") {
-      const companies = await Company.find();
-      return res.json({ companies }).lean();
+      const companies = await Company.find().lean();
+      return res.json({ companies })
     }
     // Admin → todas
     if (role === "admin") {
-      const companies = await Company.find();
-      return res.json({ companies }).lean();
+      const companies = await Company.find().lean();
+      return res.json({ companies });
     }
     // Owner → solo las suyas
     if (role === "owner") {

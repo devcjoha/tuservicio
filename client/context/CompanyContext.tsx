@@ -36,20 +36,22 @@ export const CompanyProvider = ({ children }: { children: React.ReactNode }) => 
 
   useEffect(() => {
     const getCompanies = async () => {
-      setLoading(true);
       setError(null);
+      setLoading(true);
       try {
-        if (user && user.role === "owner") {
+        const privilegedRoles = ["owner", "admin", "superadmin"];
+        
+        if (user && privilegedRoles.includes(user.role)) {
           const res = await apiFetch("/companies", {
             method: "GET",
             timeout: 15000
           });
-          setCompanies(res.companies);
+          setCompanies(res.companies || []);
           return res;
         }
       } catch (error) {
         setCompanies([])
-        setError("No se pudieron cargar las compañías");
+        setError("Error al cargar empresas");
       } finally {
         setLoading(false);
       }

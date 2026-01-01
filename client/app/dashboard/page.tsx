@@ -1,5 +1,5 @@
 "use client";
-import DashboardRouter from "@/components/dashboards/DashBoardRouter";
+import DashboardRouter from "@/context/DashBoardRouter";
 
 export default function DashboardPage({ children }: { children: React.ReactNode }) {
 

@@ -5,6 +5,7 @@ import { getLinksByPermissions } from "@/utils/getLinksByPermissions";
 import { LogOut, Menu } from "lucide-react";
 import { useState } from "react";
 import ThemeToggle from "../header/ThemeToggle";
+import { useNavigation } from "@/hooks/useNavigation";
 
 export type SidebarProps = {
   variant: "mobile" | "desktop";
@@ -12,17 +13,19 @@ export type SidebarProps = {
 function SideBar({ variant }: SidebarProps) {
   const { user, logout } = useAuth();
   const [isMoreOpen, setIsMoreOpen] = useState(false); // Estado para el menú hamburguesa
+  const { allLinks } = useNavigation();
 
-  const allLinks = getLinksByPermissions(user);
-  
+  // console.log("SIDEBAR", user);
+
+  // console.log("SIDEBAR", allLinks);
   // Si es mobile, solo mostramos los primeros 4. El resto van al "Más".
   const mainLinks = variant === "mobile" ? allLinks.slice(0, 4) : allLinks;
   const secondaryLinks = variant === "mobile" ? allLinks.slice(4) : [];
 
   return (
     <nav className={variant === "mobile" ? "fixed bottom-0 w-full bg-background border-t border-t-gray-200" : "min-h-screen"}>
-      <ul className={`flex ${variant === "mobile" ? "justify-around items-center h-14" : "flex-col gap-2 p-4 h-full"}`}>
-        
+      <ul className={`flex ${variant === "mobile" ? "justify-around items-center h-14" : "flex-col gap-2 p-4 h-screen shadow-lg"}`}>
+
         {/* Links Principales */}
         {mainLinks.map((link, index) => (
           <li key={index}>
@@ -33,7 +36,7 @@ function SideBar({ variant }: SidebarProps) {
           </li>
         ))}
 
-        <ThemeToggle/>
+        <ThemeToggle />
         {/* Botón "Más" (Solo Mobile) */}
         {variant === "mobile" && secondaryLinks.length > 0 && (
           <li>
@@ -46,11 +49,11 @@ function SideBar({ variant }: SidebarProps) {
 
         {/* Cerrar Sesión (Desktop siempre visible, Mobile dentro de 'Más') */}
         {variant === "desktop" && (
-          // <Link href={"/"}>
+
           <button onClick={logout} className="mt-auto flex gap-3 p-3 text-accent">
-             <LogOut /> <span>Cerrar sesión</span>
-            </button>
-          // </Link>
+            <LogOut /> <span>Cerrar sesión</span>
+          </button>
+
         )}
       </ul>
 

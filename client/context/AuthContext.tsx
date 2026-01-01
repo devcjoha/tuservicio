@@ -3,6 +3,7 @@
 import { apiFetch } from "@/lib/api";
 import { createContext, useState, useEffect, ReactNode } from "react";
 import { useModal } from "@/hooks/useModal";
+import { ActionType } from "@/types/permissions";
 
 export type RegisterData = {
   name: string;
@@ -14,14 +15,15 @@ export type LoginData = {
   password: string;
 }
 export type Role = "user" | "owner" | "admin" | "superadmin" | "";
+export type Status = "active" | "inactive" | "paused"| "";
 
 export type UserType = {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   role: Role;
   permissions: string[],
-  status: string[];
+  status: Status;
 };
 
 export type AuthContextType = {
@@ -33,7 +35,7 @@ export type AuthContextType = {
   login: (data: LoginData) => Promise<void>;
   logout: () => void;
   clearError: () => void;
-  hasPermission: (actionId: string) => boolean;
+  hasPermission: (actionId: ActionType) => boolean;
 };
 
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -82,7 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return null;
       }
       setUser({
-        id: res.user.id || res.user._id,
+        _id: res.user.id || res.user._id,
         name: res.user.name,
         email: res.user.email,
         role: res.user.role,
@@ -151,7 +153,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  function hasPermission(actionId: string) {
+  function hasPermission(actionId: ActionType) {
+    // Compara el ID pedido contra los permisos que llegaron en el login
     return user?.permissions.includes(actionId) ?? false;
   }
 

@@ -1,0 +1,196 @@
+/** * ARCHIVO GENERADO AUTOMÁTICAMENTE POR EL BACKEND
+ * NO EDITAR MANUALMENTE */
+
+export type ActionType = 
+  | "AUTH_REGISTER"
+  | "AUTH_LOGIN"
+  | "AUTH_LOGOUT"
+  | "AUTH_PROFILE"
+  | "REQ_SERV_CREATE"
+  | "REQ_SERV_VIEW_STATUS"
+  | "REQ_SERV_CANCEL"
+  | "REQ_SERV_RATE"
+  | "REQ_SERV_SEARCH"
+  | "REQ_SERV_FILTER_LOCATION"
+  | "REQ_SERV_FILTER_TYPE"
+  | "REQ_SERV_FILTER_POPULARITY"
+  | "REQ_VIEW_COMPANY"
+  | "REQ_ASSIGN"
+  | "REQ_SERV_UPDATE_STATUS"
+  | "REQ_SERV_ACCEPT"
+  | "REQ_SERV_REJECT"
+  | "COMPANY_CREATE"
+  | "COMPANY_EDIT"
+  | "COMPANY_DELETE"
+  | "COMPANY_TOGGLE_ACTIVE"
+  | "COMPANY_VIEW_OWN"
+  | "COMPANY_VIEW_ALL"
+  | "COMPANY_SUSPEND"
+  | "SERV_CREATE"
+  | "SERV_EDIT"
+  | "SERV_DELETE"
+  | "SERV_TOGGLE_ACTIVE"
+  | "SERV_VIEW_OWN"
+  | "SERV_VIEW_ALL"
+  | "SERV_SUSPEND"
+  | "EMP_CREATE"
+  | "EMP_EDIT"
+  | "EMP_DELETE"
+  | "STATS_VIEW_COMPANY"
+  | "STATS_VIEW_GLOBAL"
+  | "USER_SUSPEND"
+  | "USER_DELETE"
+  | "USER_VIEW_ALL"
+  | "DISPUTE_RESOLVE"
+  | "REVIEW_MODERATE"
+  | "REVIEW_DELETE"
+  | "SUPPORT_RESPOND"
+  | "ROLE_ASSIGN"
+  | "ROLE_VIEW_HISTORY"
+  | "LOGS_VIEW_SYSTEM"
+  | "LOGS_VIEW_SECURITY"
+  | "LOGS_VIEW_AUDIT"
+  | "FEATURE_TOGGLE"
+  | "SYSTEM_CONFIG"
+  | "SYSTEM_MAINTENANCE"
+  | "SYSTEM_EMERGENCY"
+  | "NOTIF_SEND_GLOBAL";
+
+export const PERMISSIONS_LIST = {
+  "actions": {
+    "AUTH_REGISTER": "Registro de usuario",
+    "AUTH_LOGIN": "Login de usuario",
+    "AUTH_LOGOUT": "Cerrar Sesión",
+    "AUTH_PROFILE": "Ruta Protegida de usuario",
+    "REQ_SERV_CREATE": "Crear solicitud de servicio",
+    "REQ_SERV_VIEW_STATUS": "Ver estado de solicitudes de servicio",
+    "REQ_SERV_CANCEL": "Cancelar solicitud de servicio",
+    "REQ_SERV_RATE": "Calificar servicio completado",
+    "REQ_SERV_SEARCH": "Buscar servicios",
+    "REQ_SERV_FILTER_LOCATION": "Filtrar servicios por localización",
+    "REQ_SERV_FILTER_TYPE": "Filtrar servicios por tipo",
+    "REQ_SERV_FILTER_POPULARITY": "Filtrar servicios por popularidad",
+    "REQ_VIEW_COMPANY": "Ver solicitudes de la Compañía",
+    "REQ_ASSIGN": "Asignar profesional",
+    "REQ_SERV_UPDATE_STATUS": "Cambiar estado de solicitud de servicio",
+    "REQ_SERV_ACCEPT": "Aceptar solicitud de servicio",
+    "REQ_SERV_REJECT": "Rechazar solicitud de servicio",
+    "COMPANY_CREATE": "Crear Compañía",
+    "COMPANY_EDIT": "Editar Compañía",
+    "COMPANY_DELETE": "Eliminar Compañía",
+    "COMPANY_TOGGLE_ACTIVE": "Activar/desactivar Compañía",
+    "COMPANY_VIEW_OWN": "Ver Compañía propia",
+    "COMPANY_VIEW_ALL": "Ver todas las Compañías",
+    "COMPANY_SUSPEND": "Suspender Compañía",
+    "SERV_CREATE": "Owner crear servicio",
+    "SERV_EDIT": "Owner editar servicio",
+    "SERV_DELETE": "Owner eliminar servicio",
+    "SERV_TOGGLE_ACTIVE": "Owner Activar/desactivar servicio",
+    "SERV_VIEW_OWN": "Owner ver servicios propios creados",
+    "SERV_VIEW_ALL": "Ver todos los servicios",
+    "SERV_SUSPEND": "Suspender servicio",
+    "EMP_CREATE": "Owner Crear empleado",
+    "EMP_EDIT": "Owner Editar empleado",
+    "EMP_DELETE": "Owner Eliminar empleado",
+    "STATS_VIEW_COMPANY": "Owner Ver estadísticas de Compañía",
+    "STATS_VIEW_GLOBAL": "Ver estadísticas globales",
+    "USER_SUSPEND": "Suspender usuario",
+    "USER_DELETE": "Eliminar usuario",
+    "USER_VIEW_ALL": "Ver todos los usuarios",
+    "DISPUTE_RESOLVE": "Resolver disputas",
+    "REVIEW_MODERATE": "Revisar calificaciones",
+    "REVIEW_DELETE": "Eliminar calificaciones ofensivas",
+    "SUPPORT_RESPOND": "Responder tickets de soporte",
+    "ROLE_ASSIGN": "Cambiar roles",
+    "ROLE_VIEW_HISTORY": "Ver historial de roles",
+    "LOGS_VIEW_SYSTEM": "Ver logs del sistema",
+    "LOGS_VIEW_SECURITY": "Ver logs de seguridad",
+    "LOGS_VIEW_AUDIT": "Ver logs de auditoría",
+    "FEATURE_TOGGLE": "Activar/desactivar features",
+    "SYSTEM_CONFIG": "Configurar políticas internas",
+    "SYSTEM_MAINTENANCE": "Acciones de mantenimiento",
+    "SYSTEM_EMERGENCY": "Acciones de emergencia",
+    "NOTIF_SEND_GLOBAL": "Enviar notificaciones globales"
+  },
+  "roles": {
+    "user": [
+      "AUTH_LOGIN",
+      "REQ_SERV_CREATE",
+      "REQ_SERV_VIEW_STATUS",
+      "REQ_SERV_CANCEL",
+      "REQ_SERV_RATE",
+      "REQ_SERV_SEARCH",
+      "REQ_SERV_FILTER_LOCATION",
+      "REQ_SERV_FILTER_TYPE",
+      "REQ_SERV_FILTER_POPULARITY",
+      "COMPANY_CREATE"
+    ],
+    "owner": [
+      "REQ_SERV_CREATE",
+      "REQ_SERV_VIEW_STATUS",
+      "REQ_SERV_CANCEL",
+      "REQ_SERV_RATE",
+      "REQ_SERV_SEARCH",
+      "REQ_SERV_FILTER_LOCATION",
+      "REQ_SERV_FILTER_TYPE",
+      "REQ_SERV_FILTER_POPULARITY",
+      "REQ_VIEW_COMPANY",
+      "REQ_ASSIGN",
+      "REQ_SERV_UPDATE_STATUS",
+      "REQ_SERV_ACCEPT",
+      "REQ_SERV_REJECT",
+      "COMPANY_EDIT",
+      "COMPANY_DELETE",
+      "COMPANY_TOGGLE_ACTIVE",
+      "COMPANY_VIEW_OWN",
+      "SERV_CREATE",
+      "SERV_EDIT",
+      "SERV_DELETE",
+      "SERV_TOGGLE_ACTIVE",
+      "SERV_VIEW_OWN",
+      "EMP_CREATE",
+      "EMP_EDIT",
+      "EMP_DELETE",
+      "STATS_VIEW_COMPANY"
+    ],
+    "admin": [
+      "COMPANY_VIEW_ALL",
+      "COMPANY_SUSPEND",
+      "USER_VIEW_ALL",
+      "USER_SUSPEND",
+      "REQ_VIEW_COMPANY",
+      "REQ_VIEW_STATUS",
+      "SERV_VIEW_ALL",
+      "SERV_SUSPEND",
+      "DISPUTE_RESOLVE",
+      "REVIEW_MODERATE",
+      "REVIEW_DELETE",
+      "SUPPORT_RESPOND",
+      "STATS_VIEW_GLOBAL",
+      "NOTIF_SEND_GLOBAL"
+    ],
+    "superadmin": [
+      "ROLE_ASSIGN",
+      "ROLE_VIEW_HISTORY",
+      "COMPANY_EDIT",
+      "COMPANY_DELETE",
+      "COMPANY_VIEW_ALL",
+      "COMPANY_SUSPEND",
+      "SERV_EDIT",
+      "SERV_DELETE",
+      "SERV_VIEW_ALL",
+      "SERV_SUSPEND",
+      "USER_DELETE",
+      "USER_SUSPEND",
+      "USER_VIEW_ALL",
+      "LOGS_VIEW_SYSTEM",
+      "LOGS_VIEW_SECURITY",
+      "LOGS_VIEW_AUDIT",
+      "FEATURE_TOGGLE",
+      "SYSTEM_CONFIG",
+      "SYSTEM_MAINTENANCE",
+      "SYSTEM_EMERGENCY",
+      "STATS_VIEW_GLOBAL"
+    ]
+  }
+} as const;

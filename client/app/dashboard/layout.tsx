@@ -1,7 +1,7 @@
 "use client";
 import { useAuth } from "@/hooks/useAuth";
 import SideBar from "@/components/sidebar/SideBar";
-import DashboardRouter from "@/components/dashboards/DashBoardRouter";
+import DashboardRouter from "@/context/DashBoardRouter";
 import HeaderDashboard from "@/components/header/HeaderDashboard";
 import { LoadingCard } from "@/components/feedbacks/LoadingCard";
 
@@ -9,12 +9,12 @@ import { LoadingCard } from "@/components/feedbacks/LoadingCard";
 function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
 
-  if (loading) return <LoadingCard message="Cargando sistema..."/>;
-  if (!user) return <LoadingCard message="Redirigiendo... obteniendo información de usuario"/>;
+  if (loading) return <LoadingCard message="Cargando sistema..." />;
+  if (!user) return <LoadingCard message="Redirigiendo... obteniendo información de sesión" />;
 
   //Dashboard Layout TODOS
   return (
- 
+
     <DashboardRouter >
       <div className="flex flex-1">
         {/* Sidebar vertical en desktop */}

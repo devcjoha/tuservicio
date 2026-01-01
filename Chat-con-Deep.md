@@ -936,3 +936,206 @@ Recomendación: Mantener este archivo actualizado con cada nueva funcionalidad a
 ---
 
 Fin del documento
+
+```js
+// api/src/lib/permissionsLinks.ts
+import permissions from "../config/permissions.json";
+import { ACTIONS } from "./actions";
+
+export const permissionsLinks = {
+  // --- Autenticación ---
+  [ACTIONS.AUTH_REGISTER]: {
+    label: permissions.actions.AUTH_REGISTER,
+    path: "/auth/register",
+  },
+  [ACTIONS.AUTH_LOGIN]: {
+    label: permissions.actions.AUTH_LOGIN,
+    path: "/auth/login",
+  },
+  [ACTIONS.AUTH_LOGOUT]: {
+    label: permissions.actions.AUTH_LOGOUT,
+    path: "/auth/logout",
+  },
+  [ACTIONS.AUTH_PROFILE]: {
+    label: permissions.actions.AUTH_PROFILE,
+    path: "/auth/profile",
+  },
+
+  // --- Solicitudes de servicio ---
+  [ACTIONS.REQ_SERV_CREATE]: {
+    label: permissions.actions.REQ_SERV_CREATE,
+    path: "/requests/create",
+  },
+  [ACTIONS.REQ_SERV_VIEW_STATUS]: {
+    label: permissions.actions.REQ_SERV_VIEW_STATUS,
+    path: "/requests/status",
+  },
+  [ACTIONS.REQ_SERV_CANCEL]: {
+    label: permissions.actions.REQ_SERV_CANCEL,
+    path: "/requests/cancel",
+  },
+  [ACTIONS.REQ_SERV_RATE]: {
+    label: permissions.actions.REQ_SERV_RATE,
+    path: "/requests/rate",
+  },
+  [ACTIONS.REQ_SERV_SEARCH]: {
+    label: permissions.actions.REQ_SERV_SEARCH,
+    path: "/requests/search",
+  },
+  [ACTIONS.REQ_SERV_FILTER_LOCATION]: {
+    label: permissions.actions.REQ_SERV_FILTER_LOCATION,
+    path: "/requests/filter/location",
+  },
+  [ACTIONS.REQ_SERV_FILTER_TYPE]: {
+    label: permissions.actions.REQ_SERV_FILTER_TYPE,
+    path: "/requests/filter/type",
+  },
+  [ACTIONS.REQ_SERV_FILTER_POPULARITY]: {
+    label: permissions.actions.REQ_SERV_FILTER_POPULARITY,
+    path: "/requests/filter/popularity",
+  },
+
+  // --- Compañías ---
+  [ACTIONS.COMPANY_CREATE]: {
+    label: permissions.actions.COMPANY_CREATE,
+    path: "/companies/create",
+  },
+  [ACTIONS.COMPANY_EDIT]: {
+    label: permissions.actions.COMPANY_EDIT,
+    path: "/companies/edit",
+  },
+  [ACTIONS.COMPANY_DELETE]: {
+    label: permissions.actions.COMPANY_DELETE,
+    path: "/companies/delete",
+  },
+  [ACTIONS.COMPANY_VIEW_ALL]: {
+    label: permissions.actions.COMPANY_VIEW_ALL,
+    path: "/companies",
+  },
+
+  // --- Servicios ---
+  [ACTIONS.SERV_CREATE]: {
+    label: permissions.actions.SERV_CREATE,
+    path: "/services/create",
+  },
+  [ACTIONS.SERV_EDIT]: {
+    label: permissions.actions.SERV_EDIT,
+    path: "/services/edit",
+  },
+  [ACTIONS.SERV_DELETE]: {
+    label: permissions.actions.SERV_DELETE,
+    path: "/services/delete",
+  },
+  [ACTIONS.SERV_VIEW_ALL]: {
+    label: permissions.actions.SERV_VIEW_ALL,
+    path: "/services",
+  },
+
+  // --- Empleados ---
+  [ACTIONS.EMP_CREATE]: {
+    label: permissions.actions.EMP_CREATE,
+    path: "/employees/create",
+  },
+  [ACTIONS.EMP_EDIT]: {
+    label: permissions.actions.EMP_EDIT,
+    path: "/employees/edit",
+  },
+  [ACTIONS.EMP_DELETE]: {
+    label: permissions.actions.EMP_DELETE,
+    path: "/employees/delete",
+  },
+
+  // --- Estadísticas ---
+  [ACTIONS.STATS_VIEW_COMPANY]: {
+    label: permissions.actions.STATS_VIEW_COMPANY,
+    path: "/stats/company",
+  },
+  [ACTIONS.STATS_VIEW_GLOBAL]: {
+    label: permissions.actions.STATS_VIEW_GLOBAL,
+    path: "/stats/global",
+  },
+
+  // --- Usuarios ---
+  [ACTIONS.USER_VIEW_ALL]: {
+    label: permissions.actions.USER_VIEW_ALL,
+    path: "/users",
+  },
+  [ACTIONS.USER_DELETE]: {
+    label: permissions.actions.USER_DELETE,
+    path: "/users/delete",
+  },
+  [ACTIONS.USER_SUSPEND]: {
+    label: permissions.actions.USER_SUSPEND,
+    path: "/users/suspend",
+  },
+
+  // --- Moderación / soporte ---
+  [ACTIONS.DISPUTE_RESOLVE]: {
+    label: permissions.actions.DISPUTE_RESOLVE,
+    path: "/disputes/resolve",
+  },
+  [ACTIONS.REVIEW_MODERATE]: {
+    label: permissions.actions.REVIEW_MODERATE,
+    path: "/reviews/moderate",
+  },
+  [ACTIONS.REVIEW_DELETE]: {
+    label: permissions.actions.REVIEW_DELETE,
+    path: "/reviews/delete",
+  },
+  [ACTIONS.SUPPORT_RESPOND]: {
+    label: permissions.actions.SUPPORT_RESPOND,
+    path: "/support/respond",
+  },
+
+  // --- Roles ---
+  [ACTIONS.ROLE_ASSIGN]: {
+    label: permissions.actions.ROLE_ASSIGN,
+    path: "/roles/assign",
+  },
+  [ACTIONS.ROLE_VIEW_HISTORY]: {
+    label: permissions.actions.ROLE_VIEW_HISTORY,
+    path: "/roles/history",
+  },
+
+  // --- Logs ---
+  [ACTIONS.LOGS_VIEW_SYSTEM]: {
+    label: permissions.actions.LOGS_VIEW_SYSTEM,
+    path: "/logs/system",
+  },
+  [ACTIONS.LOGS_VIEW_SECURITY]: {
+    label: permissions.actions.LOGS_VIEW_SECURITY,
+    path: "/logs/security",
+  },
+  [ACTIONS.LOGS_VIEW_AUDIT]: {
+    label: permissions.actions.LOGS_VIEW_AUDIT,
+    path: "/logs/audit",
+  },
+
+  // --- Sistema ---
+  [ACTIONS.FEATURE_TOGGLE]: {
+    label: permissions.actions.FEATURE_TOGGLE,
+    path: "/system/features",
+  },
+  [ACTIONS.SYSTEM_CONFIG]: {
+    label: permissions.actions.SYSTEM_CONFIG,
+    path: "/system/config",
+  },
+  [ACTIONS.SYSTEM_MAINTENANCE]: {
+    label: permissions.actions.SYSTEM_MAINTENANCE,
+    path: "/system/maintenance",
+  },
+  [ACTIONS.SYSTEM_EMERGENCY]: {
+    label: permissions.actions.SYSTEM_EMERGENCY,
+    path: "/system/emergency",
+  },
+
+  // --- Notificaciones ---
+  [ACTIONS.NOTIF_SEND_GLOBAL]: {
+    label: permissions.actions.NOTIF_SEND_GLOBAL,
+    path: "/notifications/global",
+  },
+};
+
+export type PermissionLinkId = keyof typeof permissionsLinks;
+
+```

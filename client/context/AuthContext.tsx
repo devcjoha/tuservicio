@@ -3,7 +3,7 @@
 import { apiFetch } from "@/lib/api";
 import { createContext, useState, useEffect, ReactNode } from "react";
 import { useModal } from "@/hooks/useModal";
-import { ActionType } from "@/types/permissions";
+import { PERMISSIONS_LINKS, PERMISSIONS_ROLES } from "@/types/permissions";
 
 export type RegisterData = {
   name: string;
@@ -14,7 +14,9 @@ export type LoginData = {
   email: string;
   password: string;
 }
-export type Role = "user" | "owner" | "admin" | "superadmin" | "";
+export type Role = keyof typeof PERMISSIONS_ROLES;
+export type ActionId = keyof typeof PERMISSIONS_LINKS;
+
 export type Status = "active" | "inactive" | "paused"| "";
 
 export type UserType = {
@@ -22,7 +24,7 @@ export type UserType = {
   name: string;
   email: string;
   role: Role;
-  permissions: string[],
+  permissions: readonly ActionId[],
   status: Status;
 };
 
@@ -35,7 +37,7 @@ export type AuthContextType = {
   login: (data: LoginData) => Promise<void>;
   logout: () => void;
   clearError: () => void;
-  hasPermission: (actionId: ActionType) => boolean;
+  hasPermission: (actionCode: ActionId) => boolean;
 };
 
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -153,7 +155,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  function hasPermission(actionId: ActionType) {
+  function hasPermission(actionId: ActionId) {
     // Compara el ID pedido contra los permisos que llegaron en el login
     return user?.permissions.includes(actionId) ?? false;
   }
@@ -181,7 +183,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const clearError = () => setError(null);
 
-  // Esto limpia el estado local de React antes de que la pestaña desaparezca, bo
+  // Esto limpia el estado local de React antes de que la pestaña desaparezca
   useEffect(() => {
     const handleTabClose = () => {
       setUser(null);

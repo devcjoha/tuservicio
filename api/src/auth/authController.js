@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import { jwt_secret, isProduction } from "../../config.js";
-import permissions from "../config/permissions.json" with {type: "json"};
+import Permissions from "../models/Permissions.js";
 
 // ✅ Generar JWT
 const generateToken = (userId, role) => {
@@ -14,7 +14,7 @@ const generateToken = (userId, role) => {
 export const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
-
+const permissions = await Permissions.findOne().lean();
     // Verificar si ya existe
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -32,12 +32,12 @@ export const register = async (req, res) => {
     });
     // newUser.isActive = true;
     await newUser.save();
-
+    
     const permisos = permissions.roles[newUser.role];
-
+    
     // Generar token
     const token = generateToken(newUser._id, newUser.role);
-
+    
     // Enviar cookie segura
     res.cookie("token", token, {
       httpOnly: true,
@@ -45,7 +45,7 @@ export const register = async (req, res) => {
       sameSite: isProduction ? "strict" : "lax",
       // maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-  
+    
     res.status(201).json({
       message: "Usuario registrado correctamente",
       user: {
@@ -59,18 +59,18 @@ export const register = async (req, res) => {
     });
   } catch (error) {
     console.error("Error en register:", error);
- res.status(500).json({ error: true, message: error.message });
+    res.status(500).json({ error: true, message: error.message });
   }
 };
 
 // ✅ Login
 export const login = async (req, res) => {
   const { email, password } = req.body;
-
+  
   if (!email || !password) {
     return res
-      .status(400)
-      .json({ message: "Email y contraseña son obligatorios" });
+    .status(400)
+    .json({ message: "Email y contraseña son obligatorios" });
   }
   try {
     // Buscar usuario
@@ -78,27 +78,26 @@ export const login = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "Email o contraseña inválidas" });
     }
-console.log("LOGIN", user);
-
+    
     // Comparar contraseña
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(400).json({ message: "Contraseña inválida" });
     }
+    const permissions = await Permissions.findOne().lean();
+    console.log("LOGIN", user);
+    console.log("CONTROLLER LOGIN", permissions.roles);
 
-    const permisosJson = permissions.roles[user.role];
-    const permisosActualizados = JSON.stringify(user.permissions) !== JSON.stringify(permisosJson); const userUpdate = await User.findByIdAndUpdate(user._id, {
+
+    const permisosDb = permissions.roles[user.role];
+   
+
+    const userUpdate = await User.findByIdAndUpdate(user._id, {
       $set: {
         status: "active", // ✅ siempre actualizamos status 
-        permissions: permisosActualizados ? permisosJson : user.permissions
+        permissions: permisosDb
       }
     }, { new: true, runValidators: true }).lean();
-    
-    // const userUpdate = await User.findByIdAndUpdate(user._id)
-    // userUpdate.status = "active";
-    // if (userUpdate.permissions !== user.permissions) {
-    //   user.permissions = permissions.roles[user.role]; }
-    // await userUpdate.save();
     
     // Generar token
     const token = generateToken(user._id, user.role);
@@ -154,8 +153,6 @@ export const logout = async (req, res) => {
       secure: isProduction, // Asegúrate de tener esta variable importada
       sameSite: isProduction ? "strict" : "lax",
       maxAge: 0,
-      // expires: new Date(0),
-      // path: "/",
     });
     
     return res.status(200).json({ message: "Sesión cerrada correctamente" });

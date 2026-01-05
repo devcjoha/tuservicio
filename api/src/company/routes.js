@@ -2,7 +2,7 @@ import { Router } from "express";
 import { authRequired } from "../middleware/auth/authRequired.js";
 import { validateSchema } from "../middleware/validateSchema.js";
 import { companySchema } from "./company.schema.js";
-import { isOwnerOrAdmin } from "../middleware/auth/isOwnerOrAdmin.js";
+
 import { requirePermission } from "../middleware/auth/requierePermissions.js";
 import { upload } from "../middleware/upload.js";
 import {
@@ -12,7 +12,7 @@ import {
   updateCompany,
   deleteCompany,
 } from "./companyController.js";
-import { isAdmin } from "../middleware/auth/isAdmin.js";
+
 
 const router = Router();
 
@@ -20,7 +20,7 @@ const router = Router();
 router.post(
   "/",
   authRequired,
-  requirePermission("COMPANY_CREATE"),
+  requirePermission("301"),
   upload.single("logo"),
   validateSchema(companySchema),
   createCompany
@@ -30,32 +30,26 @@ router.post(
 router.patch(
   "/:id",
   authRequired,
-  isOwnerOrAdmin,
+  requirePermission("302"),
   validateSchema(companySchema),
   updateCompany
 );
-
-// Ver TODAS las instituciones
-router.get("/", authRequired, getCompanies);
-
-// Ver una Compañia específica (admin, superadmin o owner)
-router.get("/:id", authRequired, isOwnerOrAdmin, getCompany);
-
-// Owner ver su Compañia
-router.get("/:id", authRequired, isOwnerOrAdmin);
-
-// Suspender Compañia
-router.patch("/:id/suspend", authRequired, isAdmin);
-
-// Activar o desactivar una Compañia
-router.patch("/:id/toggle", authRequired, isOwnerOrAdmin);
-
 // Eliminar Compañia (owner o superadmin)
 router.delete(
   "/:id",
   authRequired,
-  requirePermission("COMPANY_DELETE"),
+  requirePermission("303"),
   deleteCompany
 );
+// Activar o desactivar una Compañia
+router.patch("/:id/toggle", authRequired, requirePermission("304"));
+
+// Ver una Compañia específica (admin, superadmin o owner)
+router.get("/", authRequired, requirePermission("305"), getCompanies);
+// Ver TODAS las instituciones
+router.get("/", authRequired, requirePermission("306"), getCompanies);
+
+// Suspender Compañia
+router.patch("/:id/suspend", authRequired, requirePermission("307"));
 
 export default router;

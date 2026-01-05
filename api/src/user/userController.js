@@ -1,19 +1,22 @@
 import User from "../models/User.js";
 
-export const getUserProfile = async (req, res ) => {
- try {
-   const user = await User.findById(req.user.id);
-
-    if (!user) {
-      return res.status(401).json({ message: "Usuario no encontrado" });
-    }
+export const getUserProfile = async (req, res) => {
+  try {
+    // req.user ya viene lleno gracias al middleware corregido arriba
     res.json({
       message: "Perfil obtenido",
-      user,
+      user: {
+        id: req.user.id,
+        name: req.user.name,
+        email: req.user.email,
+        role: req.user.role,
+        permissions: req.user.permissions, // Permisos frescos de la DB
+        status: "active",
+      },
     });
   } catch (error) {
-    console.error("Error al obtener perfil:", error);
-    res.status(500).json({ message: "Error en el servidor" });
+    console.error("Error GetUserProfile:", error);
+    res.status(500).json({ error: true, message: error.message });
   }
 };
 

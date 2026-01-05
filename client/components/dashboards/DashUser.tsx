@@ -3,6 +3,7 @@ import { DashboardCard } from "@/components/ui/Card"
 import { useAuth } from "@/hooks/useAuth";
 import { HandHeart } from "lucide-react";
 
+
 export default function DashUser() {
   const { user } = useAuth();
   console.log("DASHUSER", user);

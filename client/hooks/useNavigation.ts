@@ -1,50 +1,38 @@
 import { useMemo } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { getLinksByPermissions, LinkCategory } from "@/utils/getLinksByPermissions";
-import { ActionType } from "@/types/permissions";
+import { PERMISSIONS_ROLES, PERMISSIONS_LINKS } from "@/types/permissions";
+import { UserType } from "@/context/AuthContext";
 
-export function useNavigation() {
-  const { user } = useAuth();
+export type Role = keyof typeof PERMISSIONS_ROLES;
+export type ActionId = keyof typeof PERMISSIONS_LINKS;
 
-  // Memorizamos todos los links permitidos para este usuario
-  const allAllowedLinks = useMemo(() => {
-    return getLinksByPermissions(user);
-  }, [user]);
 
-  /**
-   * Obtiene todos los links permitidos
-   */
-  const getAllLinks = () => allAllowedLinks;
+// Helper que ya tienes
+function getLinksById(user: UserType | null) {
+  if (!user) return [];
 
-  /**
-   * Obtiene links filtrados por una categoría específica
-   */
-  const getByCategory = (category: LinkCategory) => {
-    return allAllowedLinks.filter((link) => link.category === category);
-  };
+  const rolePermissions = PERMISSIONS_ROLES[user.role];
+  const effectivePermissions = new Set<ActionId>([
+    ...rolePermissions,
+    ...user.permissions,
+  ]);
 
-  /**
-   * Obtiene un link específico buscando por su ActionType.
-   * Útil si quieres poner un botón específico en un lugar exacto.
-   */
-  const getByAction = (action: ActionType) => {
-    return allAllowedLinks.find((link) => link.required === action);
-  };
-
-  /**
-   * Obtiene un link específico buscando por su ruta (href).
-   */
-  const getByPath = (path: string) => {
-    return allAllowedLinks.find((link) => link.href === path);
-  };
-
-  return {
-    allLinks: allAllowedLinks,
-    getByCategory,
-    getByAction,
-    getByPath,
-    user,
-    // Atajo para saber si el usuario tiene algún link de una categoría
-    hasCategory: (cat: LinkCategory) => getByCategory(cat).length > 0,
-  };
+  return Object.entries(PERMISSIONS_LINKS)
+    .filter(([actionId]) => effectivePermissions.has(actionId as ActionId))
+    .map(([_, link]) => link);
 }
+
+// Hook que envuelve la lógica
+export function useNavegation(user: UserType | null) {
+  const links = useMemo(() => getLinksById(user), [user]);
+
+  const hasPermission = (action: ActionId) => {
+    if (!user) return false;
+    const effectivePermissions = new Set<ActionId>([
+      ...PERMISSIONS_ROLES[user.role],
+      ...user.permissions,
+    ]);
+    return effectivePermissions.has(action);
+  };
+
+  return { links, hasPermission };
+};

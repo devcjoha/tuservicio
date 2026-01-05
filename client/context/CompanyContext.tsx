@@ -15,7 +15,7 @@ export type Company = {
   address: string;
   ownerId: string;
   logo?: FileList; // en el form será FileList 
-  active?: boolean; // opcional, lo devuelve la API 
+  status: "active" | "inactive" | "paused";
 }
 
 export type CompanyContextType = {
@@ -29,36 +29,58 @@ export const CompanyContext = createContext<CompanyContextType | null>(null);
 
 export const CompanyProvider = ({ children }: { children: React.ReactNode }) => {
   const [companies, setCompanies] = useState<Company[]>([]);
-  const { user, setUser } = useAuth();
+  const { user, setUser, loading: userLoading } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { open } = useModal();
 
   useEffect(() => {
-    const getCompanies = async () => {
-      setError(null);
-      setLoading(true);
-      try {
-        const privilegedRoles = ["owner", "admin", "superadmin"];
-        
-        if (user && privilegedRoles.includes(user.role)) {
-          const res = await apiFetch("/companies", {
-            method: "GET",
-            timeout: 15000
-          });
-          setCompanies(res.companies || []);
-          return res;
-        }
-      } catch (error) {
-        setCompanies([])
-        setError("Error al cargar empresas");
-      } finally {
+    const initFetch = async () => {
+      // Si Auth todavía está verificando el token, no hacemos nada aún
+      if (userLoading) return;
+
+      // Si ya terminó de cargar Auth y hay un usuario con rol privilegiado
+      if (user && user.role !== "user") {
+        const res = await getCompanies();
+        setCompanies(res.companies)             
+      } else {
+        // Si no hay usuario o es rol 'user', nos aseguramos de que no haya basura en el estado
+        setCompanies([]);
         setLoading(false);
       }
-    }
-    getCompanies();
-  }, [user]);
+    };
+    console.log(companies);
+    console.log(user);
 
+    initFetch();
+    // ESCUCHAMOS user (por si cambia de nulo a objeto) y authLoading (para saber cuándo empezar)
+  }, [user, userLoading]);
+
+  const getCompanies = async () => {
+    setError(null);
+    setLoading(true);
+    try {
+      const res = await apiFetch("/companies", {
+        method: "GET",
+        timeout: 15000
+      });
+      setCompanies(res.companies || []);
+      return res;
+    } catch (error:any) {
+      setCompanies([]);
+      setError(error.message || "Error al crear Compañia");
+      open({
+        title: "Error de Creación de Compañía",
+        message: error.message,
+        variant: "error",
+        onClose: () => setError(null),
+      });
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+    
+  };
   const createCompany = async (data: FormData) => {
     setLoading(true);
     setError(null);
@@ -73,7 +95,7 @@ export const CompanyProvider = ({ children }: { children: React.ReactNode }) => 
         const apiError = res.message
         setError(apiError);
         open({
-          title: "Error de autenticación",
+          title: "Error al crear la compañía",
           message: apiError,
           variant: "error",
           onClose: () => setError(null),

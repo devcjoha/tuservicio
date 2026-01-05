@@ -1,3 +1,11 @@
+"use client";
+import { useAuth } from "@/hooks/useAuth";
+
 export default function SuperadminDashboard() {
-  return <h1>Panel del Superadmin</h1>;
+  const { user, loading: userLoading, clearError } = useAuth();
+  
+  return (
+    user?.role === "superadmin" ? (
+      <h1>Panel del Superadmin</h1>
+    ) : (null))
 };

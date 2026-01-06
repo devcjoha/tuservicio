@@ -33,10 +33,16 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "", // Aquí se guardará algo como: "/uploads/avatars/170345.png"
     },
-    isActive:{
+    status: {
+      type: String,
+      enum: ["active", "inactive", "paused"],
+      default: "active",
+      index: true
+    },
+    isDeleted: {
       type: Boolean,
-      default: false,
-    }
+      default: false
+    },
   },
   {
     timestamps: true,

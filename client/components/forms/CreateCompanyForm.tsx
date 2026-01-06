@@ -3,29 +3,32 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../ui/Button";
-import { institutionSchema } from "@/utils/validationSchemas";
-import { Institution, useInstitutions } from "@/context/InstitutionsContext";
+import { companySchema } from "@/utils/validationSchemas";
+import { Company, useCompanies } from "@/context/CompanyContext";
 import { FormField } from "../ui/FormFields";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { ImageUploadField } from "@/utils/ImageUploadField";
+import { ImageUploadField } from "@/components/ui/ImageUploadField";
+import { useModal } from "@/hooks/useModal";
 
+type CreateCompanyInput = Omit<Company, "id" | "status">;
 
-export default function CreateInstitutionForm() {
-  const { createInstitution } = useInstitutions();
+export default function CreateCompanyForm() {
+  const { createCompany } = useCompanies();
   const { user } = useAuth();
   const router = useRouter();
-  const userId = user ? user.id : "";
+  const userId = user ? user._id : "";
+  const { close } = useModal();
 
-  const { register, control, handleSubmit, formState: { errors, isSubmitting }, reset, watch } = useForm<Institution>({
-    resolver: zodResolver(institutionSchema),
+  const { register, control, handleSubmit, formState: { errors, isSubmitting }, reset, watch } = useForm<CreateCompanyInput>({
+    resolver: zodResolver(companySchema),
     defaultValues: {
       ownerId: userId,
     }
   });
 
 
-  const onSubmit = async (data: Institution) => {
+  const onSubmit = async (data: CreateCompanyInput) => {
     try {
       // 1. Crear el contenedor FormData
       const formData = new FormData();
@@ -38,32 +41,31 @@ export default function CreateInstitutionForm() {
       formData.append("address", data.address);
       formData.append("rif", data.rif);
       formData.append("ownerId", data.ownerId);
-
       // 3. Sacamos el ARCHIVO real del FileList
-      const file = data.logo?.item(0) ?? data.logo?.[0]; 
+      const file = data.logo?.item(0) ?? data.logo?.[0];
       if (file) formData.append("logo", file);
 
       // 4. Enviar al contexto
-      await createInstitution(formData);
-
+    await createCompany(formData);
 
       if (user?.role === "owner") {
         router.push("/dashboard");
       }
-      reset();
+       setTimeout(() => { close(); }, 1000);
     } catch (err) {
-      console.error(err);
-      alert("Error al crear la institución");
+      console.error("Create Company form", err);
+      setTimeout(() => { close(); }, 5000);
     }
+    reset();
   };
 
   return (
-    <form 
-      onSubmit={handleSubmit(onSubmit)} 
+    <form
+      onSubmit={handleSubmit(onSubmit)}
       className="space-y-4  mx-auto p-6 border-gray-border rounded-md shadow-lg">
-      <input 
-        type="hidden" 
-        {...register("ownerId")} 
+         <input
+        type="hidden"
+        {...register("ownerId")}
       />
       {/* Nombre */}
       <FormField
@@ -81,7 +83,8 @@ export default function CreateInstitutionForm() {
         name="type"
         label="Selecciona el tipo de empresa"
         fieldType="select-custom"
-        control={control} // <-- aquí debe ir control error={errors.type}
+        control={control} // <-- aquí debe ir control 
+        error={errors.type}
         options={[
           { value: "emprendimiento", label: "Emprendimiento" },
           { value: "profesional", label: "Profesional" },
@@ -138,7 +141,7 @@ export default function CreateInstitutionForm() {
 
       {/* Botón */}
       <Button variant="secondary" size="lg" type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Creando institución..." : "Crear Institución"}
+        {isSubmitting ? "Creando Compañia..." : "Crear Institución"}
       </Button>
 
     </form>

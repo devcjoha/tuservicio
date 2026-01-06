@@ -6,7 +6,7 @@ node_modules
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-
+/Chat-con-Deep.md
 # testing
 /coverage
 

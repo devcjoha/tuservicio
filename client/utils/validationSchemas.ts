@@ -21,7 +21,7 @@ export const registerSchema = z.object({
   path: ["confirmPassword"], // 👈 el error se asigna a este campo
 });
 
-export const institutionSchema = z.object({
+export const companySchema = z.object({
   name: z.string().min(3, "Nombre requerido"),
   type: z.string().min(3, "Tipo requerido"),
   phone: z.string().min(7, "Teléfono requerido"),
@@ -33,4 +33,6 @@ export const institutionSchema = z.object({
     .optional()
     .refine((fl) => !fl || fl.length <= 1, "Solo se permite un archivo de logo"),
   ownerId: z.string(),
+  id: z.string().optional(),
+  status: z.enum(["active", "inactive", "paused", ""]).optional(),
 });

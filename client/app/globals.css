@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./utilities.css" layer(utilities);
 
 :root {
   --background: #ffffff;
@@ -76,8 +77,8 @@
   --color-neutral-900: var(--neutral-900);
 
   /*ICONS*/
-  --color-gray-icon: var(--color-neutral-500);
-  --color-gray-border: var(--color-neutral-200);
+  --color-gray-icon: var(--neutral-500);
+  --color-gray-border: var(--neutral-200);
 
   /*HOVERS*/
 

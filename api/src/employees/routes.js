@@ -1,11 +1,7 @@
 import { Router } from "express";
-import { authRequired } from "../middleware/authRequired.js";
-import { validateSchema } from "../middleware/validateSchema.js";
-import { isOwnerOrAdmin } from "../middleware/isOwnerOrAdmin.js";
-
+import { authRequired } from "../middleware/auth/authRequired.js";
 
 const router = Router();
-
 
 
 export default router;

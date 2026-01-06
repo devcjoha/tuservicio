@@ -3,7 +3,9 @@ import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
-import { InstitutionProvider } from "@/context/InstitutionsContext";
+import { CompanyProvider } from "@/context/CompanyContext";
+import { ModalProvider } from "@/context/ModalContext";
+
 
 const inter = Inter({
   variable: "--font-inter",
@@ -33,11 +35,13 @@ export default function RootLayout({
         className={`${montserrat.variable} ${inter.variable} ${montserrat.className} ${inter.className} antialiased`}
       >
         <ThemeProvider>
+          <ModalProvider>
           <AuthProvider>
-            <InstitutionProvider>
-          {children}
-          </InstitutionProvider>
-          </AuthProvider>
+            <CompanyProvider>
+              {children}
+            </CompanyProvider>
+            </AuthProvider>
+          </ModalProvider>
         </ThemeProvider>
       </body>
     </html>

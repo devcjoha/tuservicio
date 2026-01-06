@@ -1,15 +1,15 @@
 import { z } from "zod";
 
-export const institutionSchema = z.object({
+export const companySchema = z.object({
   name: z
     .string({
-      required_error: "El nombre de la institución es obligatorio",
+      required_error: "El nombre de la Compañia es obligatorio",
     })
     .min(3, "El nombre debe tener al menos 3 caracteres"),
 
   type: z
     .string({
-      required_error: "El tipo de institución es obligatorio",
+      required_error: "El tipo de Compañia es obligatorio",
     })
     .min(3, "El tipo debe tener al menos 3 caracteres"),
 
@@ -19,11 +19,9 @@ export const institutionSchema = z.object({
 
   address: z.string().min(5, "La dirección es demasiado corta"),
 
-   rif: z.string().regex(/^[JGVEP]-\d{8}-\d$/, "Formato de RIF inválido"),
+  rif: z.string().regex(/^[JGVEP]-\d{8}-\d$/, "Formato de RIF inválido"),
 
-  logo: z
-    .string()
-    .optional(),
+  logo: z.string().optional(),
 
   active: z.boolean().optional(),
 });

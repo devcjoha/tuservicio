@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { register, login, logout } from "./authController.js";
-import { authRequired } from "../middleware/authRequired.js";
+import { authRequired } from "../middleware/auth/authRequired.js";
 import { getUserProfile } from "../user/userController.js";
-
+import { requirePermission } from "../middleware/auth/requierePermissions.js";
 const router = Router();
 
 router.post("/register", register);

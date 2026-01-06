@@ -19,11 +19,11 @@ export const serviceSchema = z.object({
     })
     .min(0, "El precio no puede ser negativo"),
 
-  institutionId: z
+  companyId: z
     .string({
-      required_error: "La institución es obligatoria",
+      required_error: "La Compañia es obligatoria",
     })
-    .min(1, "ID de institución inválido"),
+    .min(1, "ID de Compañia inválido"),
 
   active: z.boolean().optional(),
 });

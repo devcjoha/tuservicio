@@ -85,13 +85,8 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Contraseña inválida" });
     }
     const permissions = await Permissions.findOne().lean();
-    console.log("LOGIN", user);
-    console.log("CONTROLLER LOGIN", permissions.roles);
-
-
-    const permisosDb = permissions.roles[user.role];
+       const permisosDb = permissions.roles[user.role];
    
-
     const userUpdate = await User.findByIdAndUpdate(user._id, {
       $set: {
         status: "active", // ✅ siempre actualizamos status 

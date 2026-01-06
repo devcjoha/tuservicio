@@ -1,9 +1,14 @@
 "use client";
 import DashUser from "@/components/dashboards/DashUser";
+import { LoadingCard } from "@/components/feedbacks/LoadingCard";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function UserDashboardPage() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+ if (loading) {
+    return <LoadingCard message="Obteniendo información de la nueva sesión" />;
+  };
 
   return (
     user?.role === "user" ? (

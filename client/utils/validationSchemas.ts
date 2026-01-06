@@ -33,4 +33,6 @@ export const companySchema = z.object({
     .optional()
     .refine((fl) => !fl || fl.length <= 1, "Solo se permite un archivo de logo"),
   ownerId: z.string(),
+  id: z.string().optional(),
+  status: z.enum(["active", "inactive", "paused", ""]).optional(),
 });

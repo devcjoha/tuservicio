@@ -8,7 +8,7 @@ import { upload } from "../middleware/upload.js";
 import {
   createCompany,
   getCompanies,
-  getCompany,
+  getCompanyById,
   updateCompany,
   deleteCompany,
 } from "./companyController.js";
@@ -45,7 +45,7 @@ router.delete(
 router.patch("/:id/toggle", authRequired, requirePermission("304"));
 
 // Ver una Compañia específica (admin, superadmin o owner)
-router.get("/", authRequired, requirePermission("305"), getCompanies);
+router.get("/:id", authRequired, requirePermission("305"), getCompanyById);
 // Ver TODAS las instituciones
 router.get("/", authRequired, requirePermission("306"), getCompanies);
 

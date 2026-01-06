@@ -26,7 +26,7 @@
   | "COMPANY_EDIT"
   | "COMPANY_DELETE"
   | "COMPANY_TOGGLE_ACTIVE"
-  | "COMPANY_VIEW_OWN"
+  | "COMPANY_VIEW_ID"
   | "COMPANY_VIEW_ALL"
   | "COMPANY_SUSPEND"
   | "SERV_CREATE"
@@ -111,6 +111,7 @@
   "superadmin": [
     "302",
     "303",
+    "305",
     "306",
     "307",
     "401",
@@ -342,13 +343,13 @@
     "order": 4
   },
   "305": {
-    "required": "COMPANY_VIEW_OWN",
-    "name": "Ver Compañía propia",
-    "label": "Mi compañía",
-    "href": "/company-my",
+    "required": "COMPANY_VIEW_ID",
+    "name": "Ver Compañía por Id",
+    "label": "Ver compañía",
+    "href": "/company",
     "category": "management",
     "icon": "Building",
-    "description": "Permite ver la compañía propia",
+    "description": "Permite ver la compañía una Compañía por Id",
     "order": 5
   },
   "306": {

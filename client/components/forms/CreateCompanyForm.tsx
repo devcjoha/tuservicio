@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { ImageUploadField } from "@/components/ui/ImageUploadField";
 import { useModal } from "@/hooks/useModal";
 
+type CreateCompanyInput = Omit<Company, "id" | "status">;
 
 export default function CreateCompanyForm() {
   const { createCompany } = useCompanies();
@@ -19,7 +20,7 @@ export default function CreateCompanyForm() {
   const userId = user ? user._id : "";
   const { close } = useModal();
 
-  const { register, control, handleSubmit, formState: { errors, isSubmitting }, reset, watch } = useForm<Company>({
+  const { register, control, handleSubmit, formState: { errors, isSubmitting }, reset, watch } = useForm<CreateCompanyInput>({
     resolver: zodResolver(companySchema),
     defaultValues: {
       ownerId: userId,
@@ -27,7 +28,7 @@ export default function CreateCompanyForm() {
   });
 
 
-  const onSubmit = async (data: Company) => {
+  const onSubmit = async (data: CreateCompanyInput) => {
     try {
       // 1. Crear el contenedor FormData
       const formData = new FormData();
@@ -40,18 +41,17 @@ export default function CreateCompanyForm() {
       formData.append("address", data.address);
       formData.append("rif", data.rif);
       formData.append("ownerId", data.ownerId);
-
       // 3. Sacamos el ARCHIVO real del FileList
       const file = data.logo?.item(0) ?? data.logo?.[0];
       if (file) formData.append("logo", file);
 
       // 4. Enviar al contexto
-      await createCompany(formData);
+    await createCompany(formData);
 
       if (user?.role === "owner") {
         router.push("/dashboard");
       }
-      setTimeout(() => { close(); }, 1000);
+       setTimeout(() => { close(); }, 1000);
     } catch (err) {
       console.error("Create Company form", err);
       setTimeout(() => { close(); }, 5000);
@@ -63,7 +63,7 @@ export default function CreateCompanyForm() {
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="space-y-4  mx-auto p-6 border-gray-border rounded-md shadow-lg">
-      <input
+         <input
         type="hidden"
         {...register("ownerId")}
       />
@@ -83,7 +83,8 @@ export default function CreateCompanyForm() {
         name="type"
         label="Selecciona el tipo de empresa"
         fieldType="select-custom"
-        control={control} // <-- aquí debe ir control error={errors.type}
+        control={control} // <-- aquí debe ir control 
+        error={errors.type}
         options={[
           { value: "emprendimiento", label: "Emprendimiento" },
           { value: "profesional", label: "Profesional" },

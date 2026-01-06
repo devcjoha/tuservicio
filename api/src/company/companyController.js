@@ -104,21 +104,23 @@ export const getCompanies = async (req, res) => {
   }
 };
 
-export const getCompany = async (req, res) => {
+export const getCompanyById = async (req, res) => {
   try {
-    
-    const company = await Company.findById(req.params.id);
+    const {id} = req.user
 
+     const company = await Company.find({ ownerId: id }).lean();
+        
     if (!company) {
-      return res.status(404).json({ message: "Institución no encontrada" });
+      return res.status(404).json({ message: "Compañía no encontrada" });
     }
 
-    res.json({
-      message: "Institución obtenida",
+    res.status(200).json({
+      message: "Compañía existente",
       company,
     });
+    
   } catch (error) {
-    console.error("Error al obtener Compañia:", error);
+    console.error("Error al obtener Compañía:", error);
    res.status(500).json({ error: true, message: error.message });
   }
 };

@@ -28,7 +28,7 @@ function SideBar({ variant }: SidebarProps) {
 
   return (
     <nav className={variant === "mobile" ? "fixed bottom-0 w-full bg-background border-t border-t-gray-200" : "min-h-screen"}>
-      <ul className={`flex ${variant === "mobile" ? "justify-around items-center h-14" : "flex-col gap-2 p-4 h-screen shadow-lg"}`}>
+      <ul className={`flex ${variant === "mobile" ? "justify-around items-center h-14" : "flex-col gap-2 p-4 min-h-full shadow-lg"}`}>
        
         {/* Links Principales */}
         {mainLinks.map((link, index) => (

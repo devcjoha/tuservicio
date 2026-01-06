@@ -7,10 +7,9 @@ import { LoadingCard } from "../feedbacks/LoadingCard";
 
 export default function DashOwner() {
   const { user, loading: userLoading } = useAuth();
-  const { companies, loading: companiesLoading } = useCompanies();
+  const { company, loading: companiesLoading } = useCompanies();
 
-  const company = companies[0];
-  // 2. Si todavía está cargando la API, mostramos un estado de carga local
+  // Si todavía está cargando la API, mostramos un estado de carga local
   if (companiesLoading || userLoading) {
     return (
       <div className="flex justify-center p-10">
@@ -18,11 +17,11 @@ export default function DashOwner() {
       </div>
     );
   };
-  // 3. Si terminó de cargar pero no hay empresa (por ejemplo, error de red)
+  // Si terminó de cargar pero no hay empresa (por ejemplo, error de red)
   if (!company) {
     return <p>No se encontró información de la empresa.</p>;
   };
-  console.log("DASH OWNER components", company);
+
   return (
     <section className="dashboard-owner w-full">
       <h1>Panel del Owner COMPONENT de {user?.name} </h1>

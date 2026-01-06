@@ -1,13 +1,19 @@
 import Company from "../models/Company.js";
-import permissions from "../config/permissions.json" with { type: "json" };
 import User from "../models/User.js";
 import { uploadImage } from "../utils/cloudinary.js";
-
+import jwt from "jsonwebtoken";
+import { jwt_secret, isProduction } from "../../config.js";
+import Permissions from "../models/Permissions.js";
+const generateToken = (userId, role) => {
+  return jwt.sign({ userId, role }, jwt_secret, {
+    expiresIn: "7d",
+  });
+};
 export const createCompany = async (req, res) => {
   try {
-    const userId = req.user.id; 
+    const userId = req.user.id;
     const { name, type, email, phone, address, rif } = req.body;
-
+    const permissions = await Permissions.findOne().lean();
     const image = req.file;
     if (!image) {
       return res.status(400).json({ message: "El logo es obligatorio" });
@@ -15,37 +21,50 @@ export const createCompany = async (req, res) => {
     const imageCloudinary = await uploadImage(image);
 
     // Crear Compañia
-      const newCompany = await Company.create({ 
-      name, 
-      type, 
-      email, 
-      phone, 
-      address, 
-      rif, 
-      logo: imageCloudinary.secure_url, 
-      ownerId: userId 
+    const newCompany = await Company.create({
+      name,
+      type,
+      email,
+      phone,
+      address,
+      rif,
+      logo: imageCloudinary.secure_url,
+      ownerId: userId,
     });
 
     // Actualizar rol del usuario a "owner"
-    const user = await User.findByIdAndUpdate(userId);
+      const user = await User.findById(userId);
+
     if (user.role !== "owner") {
+      // 2. Buscamos los permisos oficiales de 'owner' en Atlas
+      const permDoc = await Permissions.findOne().lean();
+      const ownerPermissions = permDoc.roles["owner"];
+
+      // 3. Actualizamos las propiedades del documento de Mongoose
       user.role = "owner";
-      user.permissions = permissions.roles["owner"];
+      user.permissions = ownerPermissions;
+
+      // 4. Guardamos los cambios en la DB
       await user.save();
     }
-    
+    // Re-generar token con rol 'owner'
+    const token = generateToken(user._id, user.role);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "strict" : "lax",
+    });
     res.status(201).json({
-      message: "Empresa creada correctamente",
+      message: "Compañía creada correctamente",
       company: newCompany,
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
-        permissions: user.permissions
-      }
+        permissions: user.permissions,
+      },
     });
-   
   } catch (error) {
     console.error("Error en createCompany:", error);
     res.status(500).json({ error: true, message: error.message });
@@ -65,13 +84,13 @@ export const getCompanies = async (req, res) => {
 
     // Superadmin → todas
     if (role === "superadmin") {
-      const companies = await Company.find();
-      return res.json({ companies }).lean();
+      const companies = await Company.find().lean();
+      return res.json({ companies })
     }
     // Admin → todas
     if (role === "admin") {
-      const companies = await Company.find();
-      return res.json({ companies }).lean();
+      const companies = await Company.find().lean();
+      return res.json({ companies });
     }
     // Owner → solo las suyas
     if (role === "owner") {
@@ -85,20 +104,23 @@ export const getCompanies = async (req, res) => {
   }
 };
 
-export const getCompany = async (req, res) => {
+export const getCompanyById = async (req, res) => {
   try {
-    const company = await Company.findById(req.params.id);
+    const {id} = req.user
 
+     const company = await Company.find({ ownerId: id }).lean();
+        
     if (!company) {
-      return res.status(404).json({ message: "Institución no encontrada" });
+      return res.status(404).json({ message: "Compañía no encontrada" });
     }
 
-    res.json({
-      message: "Institución obtenida",
+    res.status(200).json({
+      message: "Compañía existente",
       company,
     });
+    
   } catch (error) {
-    console.error("Error al obtener Compañia:", error);
+    console.error("Error al obtener Compañía:", error);
    res.status(500).json({ error: true, message: error.message });
   }
 };

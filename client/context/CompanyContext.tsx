@@ -6,6 +6,8 @@ import { apiFetch } from "@/lib/api";
 import { useModal } from "@/hooks/useModal";
 
 export type Company = {
+  // companies: Company | null;
+  // company: Company;
   id?: string; //opcional en el form 
   name: string;
   type: string;
@@ -15,12 +17,14 @@ export type Company = {
   address: string;
   ownerId: string;
   logo?: FileList; // en el form será FileList 
-  active?: boolean; // opcional, lo devuelve la API 
+  status: "active" | "inactive" | "paused";
 }
 
 export type CompanyContextType = {
   companies: Company[];
-  createCompany: (data: FormData) => Promise<void>;
+  company: Company | null;
+  createCompany: (data: FormData) => Promise<Company | null>;
+  getCompanyById: (id: string) => Promise<Company | null>;
   loading: boolean;
   error: string | null;
 };
@@ -29,34 +33,57 @@ export const CompanyContext = createContext<CompanyContextType | null>(null);
 
 export const CompanyProvider = ({ children }: { children: React.ReactNode }) => {
   const [companies, setCompanies] = useState<Company[]>([]);
-  const { user, setUser } = useAuth();
+  const [company, setCompany] = useState<Company | null>(null);
+  const { user, setUser, loading: userLoading } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { open } = useModal();
 
   useEffect(() => {
-    const getCompanies = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        if (user && user.role === "owner") {
-          const res = await apiFetch("/companies", {
-            method: "GET",
-            timeout: 15000
-          });
-          setCompanies(res.companies);
-          return res;
-        }
-      } catch (error) {
-        setCompanies([])
-        setError("No se pudieron cargar las compañías");
-      } finally {
+    const initFetch = async () => {
+
+      if (userLoading) return;
+
+      if (user && user.role === "owner") {
+        await getCompanyById(user._id);
+      } else if (user && user.role === "admin" || user?.role === "superadmin") {
+        await getCompanies();
+
+      } else {
+
+        setCompanies([]);
         setLoading(false);
       }
-    }
-    getCompanies();
-  }, [user]);
+    };
+    initFetch();
+    // ESCUCHAMOS user (por si cambia de nulo a objeto) y authLoading (para saber cuándo empezar)
+  }, [user, userLoading]);
 
+  const getCompanies = async () => {
+    setError(null);
+    setLoading(true);
+    try {
+      const res = await apiFetch("/companies", {
+        method: "GET",
+        timeout: 15000
+      });
+      setCompanies(res.companies || []);
+      return res;
+    } catch (error: any) {
+      setCompanies([]);
+      setError(error.message || "Error al crear Compañia");
+      open({
+        title: "Error de Creación de Compañía",
+        message: error.message,
+        variant: "error",
+        onClose: () => setError(null),
+      });
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+
+  };
   const createCompany = async (data: FormData) => {
     setLoading(true);
     setError(null);
@@ -71,7 +98,7 @@ export const CompanyProvider = ({ children }: { children: React.ReactNode }) => 
         const apiError = res.message
         setError(apiError);
         open({
-          title: "Error de autenticación",
+          title: "Error al crear la compañía",
           message: apiError,
           variant: "error",
           onClose: () => setError(null),
@@ -101,9 +128,28 @@ export const CompanyProvider = ({ children }: { children: React.ReactNode }) => 
     }
   };
 
+  const getCompanyById = async (id: string) => {
+    setLoading(true);
+    try {
+      const res = await apiFetch(`/companies/${id}`, {
+        method: "GET",
+      });
+      const data = Array.isArray(res.company) ? res.company[0] : res.company;
+      setCompany(data);
+      // setCompany(res.company);
+console.log(res);
+
+      return res.company; // Retorna la compañía específica
+    } catch (error: any) {
+      setError(error.message || "Error al obtener la compañía");
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <CompanyContext.Provider value={{ companies, createCompany, error, loading }}>
+    <CompanyContext.Provider value={{ companies, company, createCompany, getCompanyById, error, loading }}>
       {children}
     </CompanyContext.Provider>
   );

@@ -33,7 +33,7 @@ export function FormField({
   accept,
   // onChange,
 }: FormFieldProps) {
-  const errorId = `${name}-error`;
+
 
   return (
     <div className="flex flex-col gap-1">

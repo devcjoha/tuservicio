@@ -3,22 +3,34 @@ import { useCompanies } from "@/context/CompanyContext";
 import { useAuth } from "@/hooks/useAuth";
 import DashOwner from "@/components/dashboards/DashOwner";
 import { LoadingCard } from "@/components/feedbacks/LoadingCard";
+import { useModal } from "@/hooks/useModal";
 
-
-export default function OwnerDashboard() {
-  const { user, loading:userLoading } = useAuth()
+export default function OwnerDashboardPage() {
+  const { user, loading:userLoading, clearError } = useAuth()
   const { companies, loading: companiesLoading } = useCompanies();
+  const { open } = useModal();
 
-  if (companiesLoading || userLoading) {
+  // console.log("OWNER DASH", companies);
+  
+  if (userLoading || companiesLoading) {
     return <LoadingCard message="Obteniendo información" />;
   }
+  
+  if (!companies ) {
+    return open({
+      title: "Error de autenticación",
+      message: "No se encontró información de tu empresa. Contacta a soporte.",
+      variant: "error",
+      onClose: () => clearError(),
+    });
+  };
 
   return (
     user?.role === "owner" ? (
       <section className="dashboard-user w-full">
 
         <h1>Panel del Owner de {user?.name} </h1>
-        <DashOwner company={companies[0]} />
+        <DashOwner/>
       </section>)
       : (null)
   )

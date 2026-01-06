@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authRequired } from "../middleware/auth/authRequired.js";
 import { validateSchema } from "../middleware/validateSchema.js";
-import { isOwnerOrAdmin } from "../middleware/auth/isOwnerOrAdmin.js";
+
 
 const router = Router();
 // Crear una solicitud de servicio (user)
@@ -14,12 +14,12 @@ router.get("/my", authRequired);
 router.get("/services", authRequired);
 
 // Ver solicitudes de la Compañia
-router.get("/:id/company/:id", authRequired, isOwnerOrAdmin);
+router.get("/:id/company/:id", authRequired );
 
 // Cancelar solicitud
-router.patch("/:id/cancel", authRequired, isOwnerOrAdmin);
+router.patch("/:id/cancel", authRequired);
 // Calificar Servicio completado
-router.patch("/:id/rate", authRequired, isOwnerOrAdmin);
+router.patch("/:id/rate", authRequired);
 router.patch("", authRequired);
 router.patch("", authRequired);
 router.patch("", authRequired);

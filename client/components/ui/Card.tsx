@@ -2,11 +2,8 @@
 import { cn } from "@/utils/combine";
 import React from "react";
 import { Button } from "./Button";
-import Image, { ImageProps } from "next/image";
-import { useTheme } from "@/context/ThemeContext";
-import { URL } from "node:url";
+import { Status } from "@/context/AuthContext";
 
-type Status = "active" | "paused" | "inactive";
 type Variant = "primary" | "secondary" | "ghost" | "danger";
 
 interface DashboardCardProps {
@@ -24,6 +21,7 @@ const statusColors: Record<Status, string> = {
   active: "bg-green-100 text-green-700",
   paused: "bg-yellow-100 text-yellow-700",
   inactive: "bg-red-100 text-red-700",
+  "":""
 };
 
 const variantStyles: Record<Variant, string> = {
@@ -47,14 +45,13 @@ export function DashboardCard({
   children,
 }: DashboardCardProps) {
 
-  const { theme } = useTheme();
 
   return (
     <div className={cn(base, variantStyles[variant], className)}>
       <div className="">
         <div className="flex items-center gap-2">
           {icon && <span className="text-xl">{icon}</span>}
-          <h3 className="font-semibold text-gray-800">{title}</h3>
+          <h3 className="font-semibold text-gray-400">{title}</h3>
         </div>
         <span
           className={`px-2 py-1 text-sm font-medium rounded ${statusColors[status]}`}
@@ -64,7 +61,7 @@ export function DashboardCard({
       </div>
 
       {description && (
-        <p className="text-neutral-600">{description}</p>
+        <p className="text-gray-400">{description}</p>
       )}
 
       {actions.length > 0 && (

@@ -6,6 +6,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { CompanyProvider } from "@/context/CompanyContext";
 import { ModalProvider } from "@/context/ModalContext";
 
+
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],

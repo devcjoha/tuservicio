@@ -1,23 +1,29 @@
 "use client";
-
 import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { apiFetch } from "@/lib/api";
 import { useModal } from "@/hooks/useModal";
+import { LoadingDots } from "@/components/feedbacks/LoadingDots";
 
 export type Company = {
   // companies: Company | null;
   // company: Company;
   id?: string; //opcional en el form 
   name: string;
-  type: string;
   phone: string;
+  isPhoneVerified: boolean;
+  phoneVerificationCode: string;
   email: string;
   rif: string;
   address: string;
   ownerId: string;
-  logo?: FileList; // en el form será FileList 
+  logo?: {
+    url: string;
+    public_id: string;
+  };// en el form será FileList 
   status: "active" | "inactive" | "paused";
+  categories: string[];
+  businessModel: "Oficio-Independiente" | "Empresa" | "Cooperativa" | "Profesional-independiente";
 }
 
 export type CompanyContextType = {
@@ -37,12 +43,13 @@ export const CompanyProvider = ({ children }: { children: React.ReactNode }) => 
   const { user, setUser, loading: userLoading } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { open } = useModal();
+   const { open } = useModal();
+// console.log("COMPANY CONTEXT", user);
 
   useEffect(() => {
     const initFetch = async () => {
 
-      if (userLoading) return;
+      if (userLoading) {return <LoadingDots/>};
 
       if (user && user.role === "owner") {
         await getCompanyById(user._id);
@@ -71,9 +78,9 @@ export const CompanyProvider = ({ children }: { children: React.ReactNode }) => 
       return res;
     } catch (error: any) {
       setCompanies([]);
-      setError(error.message || "Error al crear Compañia");
+      setError(error.message || "Error al crear Empresa");
       open({
-        title: "Error de Creación de Compañía",
+        title: "Error de Creación de Empresa",
         message: error.message,
         variant: "error",
         onClose: () => setError(null),
@@ -128,17 +135,16 @@ export const CompanyProvider = ({ children }: { children: React.ReactNode }) => 
     }
   };
 
-  const getCompanyById = async (id: string) => {
+  const getCompanyById = async(id:string) => {
     setLoading(true);
     try {
-      const res = await apiFetch(`/companies/${id}`, {
+       const res = await apiFetch(`/companies/${id}`, {
         method: "GET",
       });
       const data = Array.isArray(res.company) ? res.company[0] : res.company;
       setCompany(data);
-      // setCompany(res.company);
-console.log(res);
-
+      console.log(data);
+      
       return res.company; // Retorna la compañía específica
     } catch (error: any) {
       setError(error.message || "Error al obtener la compañía");

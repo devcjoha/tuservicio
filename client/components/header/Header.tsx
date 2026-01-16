@@ -2,19 +2,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import ThemeToggle from "@/components/header/ThemeToggle";
-import Image from "next/image";
-
-import logoLight from "@/public/logo/tuservicio-light.svg";
-import logoDark from "@/public/logo/tuservicio-dark.svg";
-
 import { useTheme } from "@/context/ThemeContext";
 import { CircleX, House, Menu, UserLock } from "lucide-react";
 import Avatar from "../ui/Avatar";
 import Logo from "@/components/icons/Logo";
 
 function Header() {
-  const { theme } = useTheme();
-  const [isOpen, setIsOpen] = useState(false);
+   const [isOpen, setIsOpen] = useState(false);
 
   const handleSideBar = () => {
     setIsOpen(!isOpen);
@@ -30,10 +24,10 @@ function Header() {
         <Link href={"/"}>
           <ThemeToggle />
         </Link>
-        <Link href="/about" className="hover:text-brand-secondary">About</Link>
-        <Link href="/contact" className="hover:text-brand-secondary">Contact</Link>
-        <Link href="/login" className="hover:text-brand-secondary">Login</Link>
-        <Link href="/register" className="hover:text-brand-secondary">Register</Link>
+        <Link href="/about" className="hover:text-brand-secondary">Nosotros</Link>
+        <Link href="/contact" className="hover:text-brand-secondary">Contacto</Link>
+        <Link href="/login" className="hover:text-brand-secondary">Iniciar Sessión</Link>
+        <Link href="/register" className="hover:text-brand-secondary">Registrarme</Link>
 
         {/* AVATAR LOGIN */}
        <Avatar/>

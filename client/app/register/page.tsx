@@ -1,12 +1,14 @@
 "use client";
-
 import RegisterForm from "@/components/forms/RegisterForm";
 import Logo from "@/components/icons/Logo";
 import Link from "next/link";
+// import { useAuth } from "@/hooks/useAuth";
+// import { LoadingDots } from "@/components/feedbacks/LoadingDots";
 
 export default function RegisterPage() {
-
-
+// const { loading } = useAuth();
+  
+//   if (loading) return <LoadingDots />
   return (
     <div className="register-page min-h-screen flex flex-col items-center lg:justify-center bg-background gap-10">
       <div className="flex flex-col items-start space-y-6 lg:w-100 w-screen p-4">

@@ -6,12 +6,12 @@ import HeaderDashboard from "@/components/header/HeaderDashboard";
 import { LoadingCard } from "@/components/feedbacks/LoadingCard";
 import { LoadingDots } from "@/components/feedbacks/LoadingDots";
 
-
 function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
 
   if (loading) return <LoadingDots/>;
-  if (!user) return <LoadingCard message="Redirigiendo... obteniendo información de sesión" />;
+  if (!user) return
+    <LoadingCard message="Redirigiendo... obteniendo información de sesión" />   
 
   //Dashboard Layout TODOS
   return (

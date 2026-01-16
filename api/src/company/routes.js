@@ -2,9 +2,8 @@ import { Router } from "express";
 import { authRequired } from "../middleware/auth/authRequired.js";
 import { validateSchema } from "../middleware/validateSchema.js";
 import { companySchema } from "./company.schema.js";
-
 import { requirePermission } from "../middleware/auth/requierePermissions.js";
-import { upload } from "../middleware/upload.js";
+import { upload } from "../middleware/multer.js";
 import {
   createCompany,
   getCompanies,

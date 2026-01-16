@@ -3,8 +3,11 @@ import { authRequired } from "../middleware/auth/authRequired.js";
 import { updateUserRole } from "./userController.js";
 import { validateSchema } from "../middleware/validateSchema.js";
 import { updateRoleSchema } from "./user.schema.js";
-import { upload } from "../middleware/upload.js";
-import { updateUserAvatar } from "./userController.js";
+import {
+  updateUserAvatar,
+  requestPasswordReset,
+} from "./userController.js";
+
 const router = Router();
 
 // Eliminar usuario
@@ -19,9 +22,10 @@ router.patch("/:id/role", authRequired, validateSchema(updateRoleSchema), update
 router.patch(
   "/avatar", 
   authRequired, 
-  upload.single("avatar"), 
   updateUserAvatar
 );
+
+router.post("/forgot-password", requestPasswordReset);
 
 
 export default router;

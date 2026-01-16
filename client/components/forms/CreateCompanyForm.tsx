@@ -10,8 +10,12 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { ImageUploadField } from "@/components/ui/ImageUploadField";
 import { useModal } from "@/hooks/useModal";
+import { Controller } from "react-hook-form";
+import { MultiSelectCategories } from "@/components/ui/MultiSelect"; 
 
-type CreateCompanyInput = Omit<Company, "id" | "status">;
+type CreateCompanyInput = Omit<Company, "id" | "status" | "logo" | "isPhoneVerified" | "phoneVerificationCode" > & {
+  logo?: FileList;
+};
 
 export default function CreateCompanyForm() {
   const { createCompany } = useCompanies();
@@ -35,16 +39,24 @@ export default function CreateCompanyForm() {
 
       // 2. Agregar campos de texto
       formData.append("name", data.name);
-      formData.append("type", data.type);
       formData.append("email", data.email);
       formData.append("phone", data.phone);
       formData.append("address", data.address);
       formData.append("rif", data.rif);
       formData.append("ownerId", data.ownerId);
-      // 3. Sacamos el ARCHIVO real del FileList
-      const file = data.logo?.item(0) ?? data.logo?.[0];
-      if (file) formData.append("logo", file);
+      formData.append("businessModel", data.businessModel);
+    
+      // Enviar el array de categorías correctamente
+      data.categories.forEach((cat: string) => {
+        formData.append("categories", cat);
+      });
 
+      const logoFile = watch("logo");
+      if (logoFile && logoFile[0]) {
+        formData.append("logo", logoFile[0]);
+      }
+      console.log("FORM", formData);
+      
       // 4. Enviar al contexto
     await createCompany(formData);
 
@@ -79,19 +91,39 @@ export default function CreateCompanyForm() {
 
       {/* Tipo de empresa */}
       <FormField
-        register={register("type")}
-        name="type"
+        register={register("businessModel")}
+        name="businessModel"
         label="Selecciona el tipo de empresa"
         fieldType="select-custom"
         control={control} // <-- aquí debe ir control 
-        error={errors.type}
+        error={errors.businessModel}
         options={[
-          { value: "emprendimiento", label: "Emprendimiento" },
-          { value: "profesional", label: "Profesional" },
-          { value: "independiente", label: "Independiente" },
+          { value: "Oficio-Independiente", label: "Oficio Independiente (Plomero, etc.)" },
+          { value: "Profesional-independiente", label: "Profesional Independiente (Ingeniero, etc.)" },
+          { value: "Empresa", label: "Empresa Constituida" },
+          { value: "Cooperativa", label: "Cooperativa / Asociación" },
         ]}
       />
-
+      {/* Categoria */}
+      <Controller
+        name="categories" // El nombre que definiste en el esquema de Zod
+        control={control}
+        render={({ field, fieldState }) => (
+          <MultiSelectCategories
+            label="Categorías de servicio (puedes elegir varias)"
+            options={[
+              { value: "Plomería", label: "Plomería" },
+              { value: "Electricidad", label: "Electricidad" },
+              { value: "Limpieza", label: "Limpieza" },
+              { value: "Albañilería", label: "Albañilería" },
+              { value: "Cerrajería", label: "Cerrajería" },
+            ]}
+            value={field.value || []} // Si es nulo, le pasamos un array vacío
+            onChange={field.onChange}
+            error={fieldState.error} // Aquí pasamos el error directamente
+          />
+        )}
+      />
       {/* Correo */}
       <FormField
         name="email"
@@ -141,7 +173,7 @@ export default function CreateCompanyForm() {
 
       {/* Botón */}
       <Button variant="secondary" size="lg" type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Creando Compañia..." : "Crear Institución"}
+        {isSubmitting ? "Creando Empresa..." : "Crear Empresa"}
       </Button>
 
     </form>

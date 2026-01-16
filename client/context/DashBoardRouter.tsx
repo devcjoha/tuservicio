@@ -1,5 +1,6 @@
 "use client";
 import { LoadingCard } from "@/components/feedbacks/LoadingCard";
+import { LoadingDots } from "@/components/feedbacks/LoadingDots";
 import { Role } from "@/context/AuthContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
@@ -13,6 +14,8 @@ type DashboardRouterProps = {
 export default function DashboardRouter({ children, className }: DashboardRouterProps) {
   const { user, loading } = useAuth();
   const router = useRouter();
+// console.log("DASHROUTER", user);
+  // if (loading) return <LoadingDots />;
 
   useEffect(() => {
 
@@ -21,7 +24,12 @@ export default function DashboardRouter({ children, className }: DashboardRouter
 
     // Si terminó de cargar y no hay usuario, al login
     if (!user) {
+      sessionStorage.removeItem("session_active");
       router.push("/login");
+      return;
+    }
+    if (!user.isEmailVerified) {
+      router.push("/verify-email");
       return;
     }
     // Mapeo de rutas según el rol definido en el controlador
@@ -38,7 +46,7 @@ export default function DashboardRouter({ children, className }: DashboardRouter
     }
   }, [user, loading, router]);
 
-  if (loading) { <LoadingCard message={"Cargando sesión..."} />; return; }
+  if (loading) {<LoadingCard message={"Cargando sesión..."} />}
   return (
       // Si todavía estamos validando la cookie de sesión, no hacemos nada
       <section className={className} >

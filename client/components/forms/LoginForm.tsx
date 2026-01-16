@@ -13,7 +13,7 @@ import { useModal } from "@/hooks/useModal";
 type LoginData = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
-  const { login, clearError } = useAuth();
+  const { login, clearError, user } = useAuth();
   const router = useRouter();
   const { close } = useModal();
 
@@ -30,10 +30,12 @@ export default function LoginForm() {
       formData.append("email", data.email);
       formData.append("password", data.password);
       await login(data);
-      console.log("LOGIN", );
-
-      router.push("/dashboard");
-      setTimeout(() => { close(); }, 1000);
+      //Para dar tiempo a que revice si el email está verificado
+      setTimeout(() => {
+        router.push("/dashboard");
+        close();
+      }, 3000);
+      
     } catch (err) {
       console.error("Login Form:", err);
       setTimeout(() => { close(); }, 5000);
@@ -62,7 +64,6 @@ export default function LoginForm() {
         error={errors.password}
         fieldType="input"
       />
-
       <Button
         type="submit"
         variant="primary"
@@ -70,6 +71,7 @@ export default function LoginForm() {
       >
         Iniciar Sesión
       </Button>
+        {/* } */}
       </form>
     </div>
   );

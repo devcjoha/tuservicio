@@ -1,6 +1,15 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
+const sessionSchema = new mongoose.Schema({
+  device: String, // Ej: Chrome en Windows
+  ip: String, // La dirección IP
+  lastLogin: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -20,29 +29,98 @@ const userSchema = new mongoose.Schema(
       required: [true, "La contraseña es obligatoria"],
       minlength: [6, "La contraseña debe tener al menos 6 caracteres"],
     },
+    isEmailVerified: {
+      type: Boolean,
+      default: false, // Por defecto al registrarse es falso
+    },
+    emailVerificationToken: {type: String},
+    emailVerificationExpires: {type: Date},
+    identity: {
+      documentType: {
+        type: String,
+        enum: ["DNI", "Cédula", "Pasaporte", "RIF"],
+        required: true,
+      },
+      documentNumber: {
+        type: String,
+        unique: true,
+        sparse: true, // Permite que sea null hasta que se verifique
+        required: true,
+      },
+      status: {
+        type: String,
+        enum: ["pending", "verified", "rejected", "unsubmitted"],
+        default: "unsubmitted",
+      },
+      verifiedAt: Date,
+    },
+    phone: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    isPhoneVerified: {
+      type: Boolean,
+      default: false, // Por defecto nadie está verificado hasta que pase la prueba
+    },
+    phoneVerificationCode: {type: String},
     role: {
       type: String,
       enum: ["user", "owner", "admin", "superadmin"],
       default: "user",
+    },
+    biometrics: {
+      face: {
+        faceId: String,
+        isEnrolled: { type: Boolean, default: false },
+        lastCheck: Date,
+      },
+      fingerprint: {
+        credentialId: String, // ID único generado por el dispositivo
+        publicKey: String, // Clave para verificar la firma
+        isEnrolled: { type: Boolean, default: false },
+        counter: Number, // Para prevenir ataques de replay
+      },
+      status: {
+        type: String,
+        enum: ["not_set", "active", "locked"],
+        default: "not_set",
+      },
     },
     permissions: {
       type: [String],
       default: [],
     },
     avatar: {
-      type: String,
-      default: "", // Aquí se guardará algo como: "/uploads/avatars/170345.png"
+      url: {
+        type: String,
+        default:
+          "https://res.cloudinary.com/dkjixw8hv/image/upload/v1768047844/icon-tuservicio-light_trov12.webp",
+      },
+      public_id: {
+        type: String,
+        default: null,
+      },
     },
     status: {
       type: String,
       enum: ["active", "inactive", "paused"],
       default: "active",
-      index: true
+      index: true,
     },
     isDeleted: {
       type: Boolean,
-      default: false
+      default: false,
     },
+    ratingsAverage: {
+      type: Number,
+      default: 0,
+    },
+    ratingsCount: {
+      type: Number,
+      default: 0,
+    },
+    sessions: {type: [sessionSchema]}
   },
   {
     timestamps: true,

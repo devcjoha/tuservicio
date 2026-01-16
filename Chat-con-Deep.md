@@ -685,7 +685,7 @@ const RatingSystem: React.FC<RatingProps> = ({ serviceId, bookingId, onRated }) 
       setSubmitting(false);
     }
   };
-  
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>

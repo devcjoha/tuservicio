@@ -90,7 +90,12 @@ const serviceSchema = new mongoose.Schema(
         default: false,
       },
     },
-    images: [String],
+    images: [
+      {
+        url: { type: String, required: true },
+        public_id: { type: String, required: true },
+      },
+    ],
     ratingsAverage: {
       type: Number,
       default: 0,

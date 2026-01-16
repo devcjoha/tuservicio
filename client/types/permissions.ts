@@ -2,7 +2,7 @@
    * NO EDITAR MANUALMENTE */
  
   export type ActionId =
-   "101" | "102" | "103" | "104" | "201" | "202" | "203" | "204" | "205" | "206" | "207" | "208" | "209" | "210" | "211" | "212" | "213" | "301" | "302" | "303" | "304" | "305" | "306" | "307" | "401" | "402" | "403" | "404" | "405" | "406" | "407" | "501" | "502" | "503" | "601" | "602" | "701" | "702" | "703" | "801" | "802" | "803" | "804" | "901" | "902" | "903" | "904" | "905" | "906" | "907" | "908" | "909" | "910";
+   "101" | "102" | "103" | "104" | "201" | "202" | "203" | "204" | "205" | "206" | "207" | "208" | "209" | "210" | "211" | "212" | "213" | "301" | "302" | "303" | "304" | "305" | "306" | "307" | "401" | "402" | "403" | "404" | "405" | "406" | "407" | "501" | "502" | "503" | "601" | "602" | "701" | "702" | "703" | "801" | "802" | "803" | "804" | "900" | "901" | "902" | "903" | "904" | "905" | "906" | "907" | "908" | "909" | "910" | "911" | "912";
 
   export type ActionType =
   "AUTH_REGISTER"
@@ -48,6 +48,7 @@
   | "REVIEW_MODERATE"
   | "REVIEW_DELETE"
   | "SUPPORT_RESPOND"
+  | "PERMISSIONS_VIEW"
   | "ROLE_ASSIGN"
   | "ROLE_VIEW_HISTORY"
   | "LOGS_VIEW_SYSTEM"
@@ -57,11 +58,12 @@
   | "SYSTEM_CONFIG"
   | "SYSTEM_MAINTENANCE"
   | "SYSTEM_EMERGENCY"
-  | "NOTIF_SEND_GLOBAL";
+  | "PERMISSIONS_VIEW_ONE"
+  | "PERMISSIONS_EDIT"
+  | "PERMISSIONS_CREATE";
 
   export const PERMISSIONS_ROLES = {
   "user": [
-    "104",
     "201",
     "202",
     "203",
@@ -70,10 +72,12 @@
     "206",
     "207",
     "208",
-    "301"
+    "301",
+    "104"
   ],
   "owner": [
     "201",
+    "104",
     "209",
     "210",
     "211",
@@ -106,7 +110,8 @@
     "802",
     "803",
     "804",
-    "910"
+    "910",
+    "104"
   ],
   "superadmin": [
     "302",
@@ -120,6 +125,7 @@
     "406",
     "407",
     "702",
+    "900",
     "902",
     "903",
     "904",
@@ -127,7 +133,11 @@
     "906",
     "907",
     "908",
-    "909"
+    "909",
+    "910",
+    "911",
+    "912",
+    "104"
   ]
 } as const;
   
@@ -156,9 +166,9 @@
     "required": "AUTH_LOGOUT",
     "name": "Cerrar Sesión",
     "label": "Cerrar sesión",
-    "href": "LogOut",
+    "href": "/logout",
     "category": "auth",
-    "icon": "EllipsisVertical",
+    "icon": "LogOut",
     "description": "Finaliza la sesión activa del usuario",
     "order": 3
   },
@@ -562,6 +572,16 @@
     "description": "Permite responder tickets de soporte",
     "order": 4
   },
+  "900": {
+    "required": "PERMISSIONS_VIEW",
+    "name": "Ver los permisos",
+    "label": "Permisos",
+    "href": "/permissions",
+    "category": "setting",
+    "icon": "ShieldUser",
+    "description": "Permite ver todos los permisos",
+    "order": 1
+  },
   "901": {
     "required": "ROLE_ASSIGN",
     "name": "Cambiar roles",
@@ -653,13 +673,33 @@
     "order": 9
   },
   "910": {
-    "required": "NOTIF_SEND_GLOBAL",
-    "name": "Enviar notificaciones globales",
-    "label": "Notificaciones globales",
-    "href": "/notifications-global",
-    "category": "admin",
-    "icon": "Bell",
-    "description": "Permite enviar notificaciones globales a todos los usuarios",
-    "order": 10
+    "required": "PERMISSIONS_VIEW_ONE",
+    "name": "Ver un permiso",
+    "label": "Ver permiso",
+    "href": "/permission-one",
+    "category": "setting",
+    "icon": "ShieldUser",
+    "description": "Permite ver un permiso",
+    "order": 1
+  },
+  "911": {
+    "required": "PERMISSIONS_EDIT",
+    "name": "Editar un permiso",
+    "label": "Editar Permisos",
+    "href": "/permission-edit",
+    "category": "setting",
+    "icon": "ShieldUser",
+    "description": "Permite editar un permiso",
+    "order": 1
+  },
+  "912": {
+    "required": "PERMISSIONS_CREATE",
+    "name": "Crear un nuevo permiso",
+    "label": "Crear Permiso",
+    "href": "/permission-new",
+    "category": "setting",
+    "icon": "ShieldUser",
+    "description": "Permite crear un permiso",
+    "order": 1
   }
 } as const;

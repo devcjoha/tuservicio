@@ -1,5 +1,5 @@
-{
-  "actions": {
+ ```json 
+ {"actions": {
     "101": {
       "required": "AUTH_REGISTER",
       "name": "Registro de usuario",
@@ -16,7 +16,7 @@
       "label": "Iniciar sesión",
       "href": "/login",
       "category": "auth",
-      "icon": "log-in",
+      "icon": "LogIn",
       "description": "Permite al usuario acceder a su cuenta",
       "order": 2
     },
@@ -26,7 +26,7 @@
       "label": "Cerrar sesión",
       "href": "/logout",
       "category": "auth",
-      "icon": "EllipsisVertical",
+      "icon": "LogOut",
       "description": "Finaliza la sesión activa del usuario",
       "order": 3
     },
@@ -211,13 +211,13 @@
       "order": 4
     },
     "305": {
-      "required": "COMPANY_VIEW_OWN",
-      "name": "Ver Compañía propia",
-      "label": "Mi compañía",
-      "href": "/company-my",
+      "required": "COMPANY_VIEW_ID",
+      "name": "Ver Compañía por Id",
+      "label": "Ver compañía",
+      "href": "/company",
       "category": "management",
       "icon": "Building",
-      "description": "Permite ver la compañía propia",
+      "description": "Permite ver la compañía una Compañía por Id",
       "order": 5
     },
     "306": {
@@ -430,6 +430,16 @@
       "description": "Permite responder tickets de soporte",
       "order": 4
     },
+    "900": {
+      "required": "PERMISSIONS_VIEW",
+      "name": "Ver los permisos",
+      "label": "Permisos",
+      "href": "/permissions",
+      "category": "setting",
+      "icon": "ShieldUser",
+      "description": "Permite ver todos los permisos",
+      "order": 1
+    },
     "901": {
       "required": "ROLE_ASSIGN",
       "name": "Cambiar roles",
@@ -506,7 +516,7 @@
       "label": "Mantenimiento",
       "href": "/config-maintenance",
       "category": "setting",
-      "icon": "Tool",
+      "icon": "BrushCleaning",
       "description": "Permite ejecutar acciones de mantenimiento del sistema",
       "order": 8
     },
@@ -521,84 +531,35 @@
       "order": 9
     },
     "910": {
-      "required": "NOTIF_SEND_GLOBAL",
-      "name": "Enviar notificaciones globales",
-      "label": "Notificaciones globales",
-      "href": "/notifications-global",
-      "category": "admin",
-      "icon": "Bell",
-      "description": "Permite enviar notificaciones globales a todos los usuarios",
-      "order": 10
+      "required": "PERMISSIONS_VIEW_ONE",
+      "name": "Ver un permiso",
+      "label": "Ver permiso",
+      "href": "/permission-one",
+      "category": "setting",
+      "icon": "ShieldUser",
+      "description": "Permite ver un permiso",
+      "order": 1
+    },
+    "911": {
+      "required": "PERMISSIONS_EDIT",
+      "name": "Editar un permiso",
+      "label": "Editar Permisos",
+      "href": "/permission-edit",
+      "category": "setting",
+      "icon": "ShieldUser",
+      "description": "Permite editar un permiso",
+      "order": 1
+    },
+    "912": {
+      "required": "PERMISSIONS_CREATE",
+      "name": "Crear un nuevo permiso",
+      "label": "Crear Permiso",
+      "href": "/permission-new",
+      "category": "setting",
+      "icon": "ShieldUser",
+      "description": "Permite crear un permiso",
+      "order": 1
     }
-  },
-  "roles": {
-    "user": [
-      "104",
-      "201",
-      "202",
-      "203",
-      "204",
-      "205",
-      "206",
-      "207",
-      "208",
-      "301"
-    ],
-    "owner": [
-      "201",
-      "209",
-      "210",
-      "211",
-      "212",
-      "213",
-      "302",
-      "304",
-      "305",
-      "401",
-      "402",
-      "403",
-      "404",
-      "405",
-      "501",
-      "502",
-      "503",
-      "601"
-    ],
-    "admin": [
-      "202",
-      "209",
-      "306",
-      "307",
-      "406",
-      "407",
-      "602",
-      "701",
-      "703",
-      "801",
-      "802",
-      "803",
-      "804",
-      "910"
-    ],
-    "superadmin": [
-      "302",
-      "303",
-      "306",
-      "307",
-      "401",
-      "402",
-      "403",
-      "406",
-      "407",
-      "702",
-      "902",
-      "903",
-      "904",
-      "905",
-      "906",
-      "907",
-      "908",
-      "909"
-    ]
   }
 }
+```

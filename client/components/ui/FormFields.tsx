@@ -48,6 +48,7 @@ export function FormField({
           placeholder={placeholder || label}
           error={!!error}
           errorMessage={error?.message}
+          className="text-foreground"
         />
       )}
 

@@ -1,11 +1,16 @@
 "use client";
+import DashSuperAdmin from "@/components/dashboards/DashSuperadmin";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function SuperadminDashboard() {
-  const { user, loading: userLoading, clearError } = useAuth();
+  const { user } = useAuth();
+
   
   return (
     user?.role === "superadmin" ? (
-      <h1>Panel del Superadmin</h1>
+      <div>
+      <h1>Container del Superadmin</h1>
+        <DashSuperAdmin />
+      </div>
     ) : (null))
 };

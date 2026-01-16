@@ -12,11 +12,11 @@ import { useModal } from "@/hooks/useModal";
 type RegisterData = z.infer<typeof registerSchema>;
 
 export default function RegisterForm() {
-  const { registerAuth } = useAuth();
+  const { registerAuth, user } = useAuth();
   const router = useRouter();
   const { close } = useModal();
 
-  const { register, handleSubmit, formState: { errors, isSubmitting }, reset } =
+  const { register, handleSubmit, control, formState: { errors, isSubmitting }, reset } =
     useForm<RegisterData>({
       resolver: zodResolver(registerSchema),
     });
@@ -24,12 +24,22 @@ export default function RegisterForm() {
   const onSubmit = async (data: RegisterData) => {
 
     try {
-      const formData = new FormData();
-      formData.append("email", data.email);
-      formData.append("password", data.password);
-      await registerAuth(data);
-      router.push("/dashboard");
+      const payload = {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        phone: data.phone,
+        identity: {
+          documentType: data.documentType,
+          documentNumber: data.documentNumber
+        } 
+      };
+     
+      await registerAuth(payload);
       setTimeout(() => { close(); }, 1000);
+   
+        router.push("/verify-email");
+   
     } catch (err) {
       console.error("Register:", err);
       setTimeout(() => { close(); }, 5000);
@@ -42,10 +52,11 @@ export default function RegisterForm() {
 
       <FormField
         name="name"
-        label="Nombre"
+        label="Nombre y Apellido"
         register={register("name")}
         error={errors.name}
         fieldType="input"
+        placeholder="Nombre y Apellido"
       />
 
       <FormField
@@ -54,6 +65,33 @@ export default function RegisterForm() {
         type="email"
         register={register("email")}
         error={errors.email}
+        fieldType="input"
+      />
+      <FormField
+        name="phone"
+        label="Teléfono"
+        register={register("phone")}
+        error={errors.phone}
+        fieldType="input"
+      />
+      <FormField
+        register={register("documentType")}
+        name="documentType"
+        label="Documento de Indentificación"
+        fieldType="select-custom"
+        control={control} // <-- aquí debe ir control 
+        error={errors.documentType}
+        options={[
+          { value: "Cédula", label: "Cédula" },
+          { value: "Pasaporte", label: "Pasaporte" },
+          { value: "RIF", label: "RIF" },
+        ]}
+      />
+      <FormField
+        name="documentNumber"
+        label="Numero de documento"
+        register={register("documentNumber")}
+        error={errors.documentNumber}
         fieldType="input"
       />
       <div>
@@ -75,6 +113,7 @@ export default function RegisterForm() {
         error={errors.confirmPassword}
         fieldType="input"
       />
+
       <Button type="submit" disabled={isSubmitting}>
         {isSubmitting ? "Registrando..." : "Registrar"}
       </Button>

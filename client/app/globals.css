@@ -16,7 +16,7 @@
   /* Crimson */
   --brand-soft: #c5d86d;
   /* Lime Cream */
-  
+
   /* NEUTRALS */
   --neutral-50: #fafafa;
   --neutral-100: #f2f2f3;
@@ -41,7 +41,7 @@
   /* Tiger Flame */
   --error: #d7263d;
   /* Crimson */
-
+  --color-icon: #949498;
   /* Typography */
   --color-Typography: #2f2f31;
   --font-inter-sans: "Inter", sans-serif;
@@ -77,7 +77,7 @@
   --color-neutral-900: var(--neutral-900);
 
   /*ICONS*/
-  --color-gray-icon: var(--neutral-500);
+  --color-icon: var(--color-icon);
   --color-gray-border: var(--neutral-200);
 
   /*HOVERS*/
@@ -94,7 +94,8 @@
   /* Tiger Flame */
   --color-error: var(--error);
   /* Crimson */
---text-size-title: var(--size-title);
+
+  --text-size-title: var(--size-title);
   --color-fontColor: var(--color-Typography);
   --font-inter: var(--font-inter-sans);
   --font-montserrat: var(--font-montserrat-sans);
@@ -104,6 +105,8 @@
   --background: #2e294e;
   --foreground: #ffffff;
   --color-Typography: #ffffff;
+
+  --color-icon: #e5e5e7;
 
   --brand-primary: #1b998b;
   /* Indigo Space */

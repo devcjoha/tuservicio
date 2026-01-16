@@ -1,0 +1,10 @@
+{
+  "workbench.colorTheme": "Monokai",
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.preferredDarkColorTheme": "Monokai",
+  "workbench.tree.indent": 6,
+  "workbench.tree.renderIndentGuides": "always",
+  "workbench.settings.useSplitJSON": false,
+  "window.autoDetectColorScheme": true,
+  "editor.wordWrapColumn": 100
+}

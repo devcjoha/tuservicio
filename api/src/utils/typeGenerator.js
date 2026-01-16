@@ -11,7 +11,7 @@ export async function generatePermissionTypes(){
 
   const outputPath = path.resolve(__dirname, '../../../client/types/permissions.ts');
 
-  const permissions = await PermissionsModel.findOne().lean();
+    const permissions = await PermissionsModel.findOne().lean();
     if (!permissions) throw new Error("Permissions document not found");
     
   // 2. Extraer las llaves de las acciones
